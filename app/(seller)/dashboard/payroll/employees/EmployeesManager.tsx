@@ -146,9 +146,20 @@ export default function EmployeesManager({ initial }: { initial: PayrollEmployee
   }
 
   const showForm = adding || editingId !== null;
+  const FREE_LIMIT = 3;
+  const activeCount = initial.filter(e => e.active).length;
 
   return (
     <div>
+      {activeCount >= FREE_LIMIT && (
+        <div style={{ background: 'rgba(217,160,45,0.1)', border: '1px solid rgba(217,160,45,0.4)', borderRadius: 12, padding: '12px 16px', marginBottom: 18 }}>
+          <div style={{ fontFamily: "'Hanken Grotesk',sans-serif", fontSize: 12.5, color: '#9B6F00', lineHeight: 1.5 }}>
+            You have used your {FREE_LIMIT} free employee slots ({activeCount} active). You can keep adding staff
+            for now, but larger teams will need a paid plan in future.
+          </div>
+        </div>
+      )}
+
       {!showForm && (
         <button onClick={openAdd} style={{ background: NAVY, color: '#F7F1E3', fontFamily: "'Space Grotesk',sans-serif", fontWeight: 600, fontSize: 14, padding: '10px 18px', borderRadius: 8, border: 'none', cursor: 'pointer', marginBottom: 20 }}>
           + Add employee

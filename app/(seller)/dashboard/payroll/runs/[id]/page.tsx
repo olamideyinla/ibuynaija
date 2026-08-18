@@ -80,7 +80,12 @@ export default async function PayrollRunPage({ params }: { params: Promise<{ id:
         <RunActions runId={run.id} status={run.status} />
 
         {/* Payslips */}
-        <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 16, color: NAVY, margin: '26px 0 12px' }}>Payslips</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '26px 0 12px' }}>
+          <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 16, color: NAVY }}>Payslips</div>
+          <a href={`/api/payroll/runs/${run.id}/export`} style={{ fontFamily: "'Hanken Grotesk',sans-serif", fontSize: 13, fontWeight: 600, color: NAVY, textDecoration: 'none', border: '1px solid rgba(27,42,74,0.15)', borderRadius: 8, padding: '7px 14px' }}>
+            ↓ Download CSV
+          </a>
+        </div>
         <div style={{ ...card, overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 560 }}>
             <thead>

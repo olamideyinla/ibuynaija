@@ -8,6 +8,7 @@
  */
 
 import type { SalaryStructure } from '@/types';
+import { buildStructureFromGross } from './salary-template';
 
 export interface EmployeeFields {
   name: string;
@@ -52,23 +53,24 @@ export function parseEmployeeBody(
     return { error: 'Daily employees need a daily rate greater than 0' };
   }
 
-  // Salary structure: use explicit basic/housing/transport, else split gross 50/30/20.
-  let basic = posNumOrNull(b.basic) ?? 0;
-  let housing = posNumOrNull(b.housing) ?? 0;
-  let transport = posNumOrNull(b.transport) ?? 0;
+  // Salary structure: use explicit basic/housing/transport when provided, else
+  // apply the default template (Basic 42 / Housing 25 / Transport 15 / Lunch 10 /
+  // Leave 8 percent of gross) via buildStructureFromGross.
+  const basic = posNumOrNull(b.basic) ?? 0;
+  const housing = posNumOrNull(b.housing) ?? 0;
+  const transport = posNumOrNull(b.transport) ?? 0;
   const grossTotal = gross ?? (salaryType === 'daily' ? (dailyRate ?? 0) * 26 : 0);
 
-  if (basic + housing + transport === 0 && grossTotal > 0) {
-    basic = Math.round(grossTotal * 0.5 * 100) / 100;
-    housing = Math.round(grossTotal * 0.3 * 100) / 100;
-    transport = Math.round(grossTotal * 0.2 * 100) / 100;
+  let salary_structure: SalaryStructure;
+  if (basic + housing + transport > 0) {
+    salary_structure = {
+      basic, housing, transport,
+      otherAllowances: [],
+      grossTotal: grossTotal || basic + housing + transport,
+    };
+  } else {
+    salary_structure = buildStructureFromGross(grossTotal);
   }
-
-  const salary_structure: SalaryStructure = {
-    basic, housing, transport,
-    otherAllowances: [],
-    grossTotal: grossTotal || basic + housing + transport,
-  };
 
   let startDate = strOrNull(b.start_date);
   if (!startDate || !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {

@@ -110,6 +110,7 @@ export default async function PayrollHomePage() {
 
         {/* Nav */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
+          <NavCard href="/dashboard/payroll/calculator" title="Salary quick check" desc="Work out the gross needed for a target take-home pay" />
           <NavCard href="/dashboard/payroll/employees" title="Employees" desc="Add staff and their salary structure" />
           <NavCard href="/dashboard/payroll/settings" title="Payroll settings" desc="Employer details, PFA, state of operation, enrolments" />
           <NavCard href="/dashboard/payroll/run" title="Run payroll" desc="Calculate a month's payslips and remittances" />
