@@ -1,0 +1,217 @@
+/**
+ * lib/payroll/nigeria-profile.ts
+ *
+ * Nigeria payroll rules under the Nigeria Tax Act (NTA) 2025.
+ *
+ * IMPORTANT: This is one of the two files that hold the Nigeria payroll tax
+ * logic (the other is lib/payroll/engine.ts). Do NOT duplicate these rules in
+ * pages, routes, or SQL. Import and pass this profile to calculatePayslip().
+ *
+ * Source: Nigeria Tax Act (NTA) 2025, signed 26 June 2025, effective 1 January
+ * 2026. Replaces PITA. Ported from the verified agri-manager implementation.
+ *
+ * This is a management tool, not a licensed payroll processor. Figures should be
+ * confirmed with a qualified tax professional.
+ */
+
+import type { CountryPayrollProfile } from '@/types';
+
+export const NIGERIA_PROFILE: CountryPayrollProfile = {
+  countryCode: 'NG',
+  countryName: 'Nigeria',
+  currency: 'NGN',
+  lastVerified: '2026-01-01',
+  effectiveDate: '2026-01-01',
+  sourceNotes:
+    'Nigeria Tax Act (NTA) 2025, signed June 26 2025, effective January 1 2026. Replaces PITA. Verified against KPMG, EY, and PwC analyses.',
+  fiscalYearStart: '01-01',
+  taxYearStart: '01-01',
+
+  taxSystem: {
+    name: 'PAYE',
+    period: 'annual',
+    brackets: [
+      { min: 0,          max: 800000,   rate: 0  },
+      { min: 800000,     max: 3000000,  rate: 15 },
+      { min: 3000000,    max: 10000000, rate: 18 },
+      { min: 10000000,   max: 25000000, rate: 21 },
+      { min: 25000000,   max: 50000000, rate: 23 },
+      { min: 50000000,   max: null,     rate: 25 },
+    ],
+    minimumTax: null,
+  },
+
+  statutoryDeductions: [
+    {
+      id: 'pension_employee',
+      name: 'Pension (Employee)',
+      shortCode: 'PEN',
+      paidBy: 'employee',
+      employeeRate: 8,
+      employeeFixedAmount: null,
+      employeeCap: null,
+      employerRate: null,
+      employerFixedAmount: null,
+      employerCap: null,
+      basis: 'basic_housing_transport',
+      basisDescription: 'Basic + Housing + Transport allowances',
+      preTax: true,
+      mandatory: true,
+      mandatoryConditions: 'Organizations with 3 or more employees under the Contributory Pension Scheme',
+      notes: 'Only Basic, Housing, and Transport are pensionable emoluments under NTA 2025.',
+    },
+    {
+      id: 'pension_employer',
+      name: 'Pension (Employer)',
+      shortCode: 'PEN-ER',
+      paidBy: 'employer',
+      employeeRate: null,
+      employeeFixedAmount: null,
+      employeeCap: null,
+      employerRate: 10,
+      employerFixedAmount: null,
+      employerCap: null,
+      basis: 'basic_housing_transport',
+      basisDescription: 'Basic + Housing + Transport allowances',
+      preTax: false,
+      mandatory: true,
+      mandatoryConditions: 'Same as employee pension',
+      notes: 'Employer contribution. Not deducted from worker pay.',
+    },
+    {
+      id: 'nhf',
+      name: 'National Housing Fund',
+      shortCode: 'NHF',
+      paidBy: 'employee',
+      employeeRate: 2.5,
+      employeeFixedAmount: null,
+      employeeCap: null,
+      employerRate: null,
+      employerFixedAmount: null,
+      employerCap: null,
+      basis: 'gross',
+      basisDescription: 'Gross salary',
+      preTax: true,
+      mandatory: false,
+      mandatoryConditions: 'Mandatory for public sector. Not compulsory for private sector employees.',
+      notes: 'NHF changed from basic to gross under NTA 2025.',
+    },
+    {
+      id: 'nhis_employee',
+      name: 'Health Insurance (Employee)',
+      shortCode: 'NHIS',
+      paidBy: 'employee',
+      employeeRate: 5,
+      employeeFixedAmount: null,
+      employeeCap: null,
+      employerRate: null,
+      employerFixedAmount: null,
+      employerCap: null,
+      basis: 'basic',
+      basisDescription: 'Basic salary',
+      preTax: true,
+      mandatory: false,
+      mandatoryConditions: 'Applicable where employee is enrolled in NHIS.',
+      notes: null,
+    },
+    {
+      id: 'nhis_employer',
+      name: 'Health Insurance (Employer)',
+      shortCode: 'NHIS-ER',
+      paidBy: 'employer',
+      employeeRate: null,
+      employeeFixedAmount: null,
+      employeeCap: null,
+      employerRate: 10,
+      employerFixedAmount: null,
+      employerCap: null,
+      basis: 'basic',
+      basisDescription: 'Basic salary',
+      preTax: false,
+      mandatory: false,
+      mandatoryConditions: 'Same as employee NHIS',
+      notes: null,
+    },
+    {
+      id: 'nsitf',
+      name: 'Employee Compensation (NSITF)',
+      shortCode: 'NSITF',
+      paidBy: 'employer',
+      employeeRate: null,
+      employeeFixedAmount: null,
+      employeeCap: null,
+      employerRate: 1,
+      employerFixedAmount: null,
+      employerCap: null,
+      basis: 'gross',
+      basisDescription: 'Total monthly payroll',
+      preTax: false,
+      mandatory: true,
+      mandatoryConditions: 'All employers',
+      notes: 'Nigeria Social Insurance Trust Fund. Employer only.',
+    },
+    {
+      id: 'itf',
+      name: 'Industrial Training Fund',
+      shortCode: 'ITF',
+      paidBy: 'employer',
+      employeeRate: null,
+      employeeFixedAmount: null,
+      employeeCap: null,
+      employerRate: 1,
+      employerFixedAmount: null,
+      employerCap: null,
+      basis: 'gross',
+      basisDescription: 'Total monthly payroll',
+      preTax: false,
+      mandatory: false,
+      mandatoryConditions: 'Organizations with 5 or more employees or annual turnover above N50 million',
+      notes: 'Many small businesses are below the threshold.',
+    },
+  ],
+
+  allowanceTypes: [
+    { id: 'basic',     name: 'Basic Salary',        taxable: true, partOfPensionable: true,  commonPercentageOfBasic: null, notes: 'Typically 40% of gross' },
+    { id: 'housing',   name: 'Housing Allowance',    taxable: true, partOfPensionable: true,  commonPercentageOfBasic: 75,   notes: 'Typically 30% of gross (75% of basic)' },
+    { id: 'transport', name: 'Transport Allowance',  taxable: true, partOfPensionable: true,  commonPercentageOfBasic: 25,   notes: 'Typically 10% of gross (25% of basic)' },
+    { id: 'meal',      name: 'Meal/Lunch Allowance', taxable: true, partOfPensionable: false, commonPercentageOfBasic: null, notes: null },
+    { id: 'utility',   name: 'Utility Allowance',    taxable: true, partOfPensionable: false, commonPercentageOfBasic: null, notes: null },
+    { id: 'leave',     name: 'Leave Allowance',      taxable: true, partOfPensionable: false, commonPercentageOfBasic: null, notes: 'Typically 10% of basic, paid annually' },
+  ],
+
+  taxReliefs: [
+    {
+      id: 'rent_relief',
+      name: 'Rent Relief',
+      type: 'capped_percentage',
+      value: 20,
+      cap: 500000,
+      basis: 'Annual rent paid by the employee',
+      requiresDocumentation: true,
+      documentationDescription: 'Tenancy agreement and rent receipts. Must be claimed in writing.',
+      conditions: 'Only available to taxpayers who pay rent for residential accommodation.',
+      notes: 'Replaces the abolished CRA under NTA 2025. Applied annually, spread across 12 months.',
+    },
+    {
+      id: 'life_insurance',
+      name: 'Life Insurance Premium Relief',
+      type: 'percentage',
+      value: 100,
+      cap: null,
+      basis: 'Annual life insurance premium paid',
+      requiresDocumentation: true,
+      documentationDescription: 'Insurance policy and payment receipts',
+      conditions: 'Qualifying life insurance policies only',
+      notes: null,
+    },
+  ],
+
+  thresholds: [
+    {
+      id: 'paye_exemption',
+      name: 'PAYE Exemption Threshold',
+      annualAmount: 800000,
+      description: 'Employees with annual chargeable income of N800,000 or less are exempt from PAYE.',
+    },
+  ],
+};

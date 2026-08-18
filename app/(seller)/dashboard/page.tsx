@@ -153,6 +153,7 @@ export default async function SellerDashboardPage() {
           <NavCard href="/dashboard/promotions" label="Promotions"                desc="Run discounts on your listings — no coupon codes needed" />
           <NavCard href="/dashboard/activity"   label="Business Activity"         desc="Log offline sales and business expenses (self-reported)" />
           <NavCard href="/dashboard/revenue"    label="Revenue & Expense Summary" desc="Track sales, expenses, and promotion impact (self-reported)" />
+          <NavCard href="/dashboard/payroll"    label="Payroll"                   desc="Run Nigeria payroll for your staff: PAYE, pension, NHF and remittances" />
         </div>
 
         {/* QR code */}

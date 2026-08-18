@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { href: '/admin/name-changes',        label: 'Name Changes' },
   { href: '/admin/listings',            label: 'Listing Reports' },
   { href: '/admin/ratings',             label: 'Rating Reports' },
+  { href: '/admin/payroll',             label: 'Payroll' },
   { href: '/admin/messages',            label: 'Messages' },
   { href: '/admin/settings',            label: 'Settings' },
 ];

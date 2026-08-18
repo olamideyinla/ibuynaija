@@ -416,3 +416,267 @@ export interface RankingContext {
   buyer_state: string | null;
   buyer_city: string | null;
 }
+
+// ─── PAYROLL (Nigeria only — NTA 2025) ───────────────────────────────────────
+// Tax logic lives in lib/payroll/. The engine operates on the camelCase domain
+// types below; the runner maps DB rows (snake_case, at the bottom) to/from them.
+
+// -- Country profile (matches lib/payroll/nigeria-profile.ts) --
+
+export interface TaxBracket {
+  min: number;
+  max: number | null;
+  rate: number;
+}
+
+export interface TaxSystem {
+  name: string;
+  period: 'annual' | 'monthly';
+  brackets: TaxBracket[];
+  minimumTax: { enabled: boolean; rate: number; basis: string } | null;
+}
+
+export interface StatutoryDeduction {
+  id: string;
+  name: string;
+  shortCode: string;
+  paidBy: 'employee' | 'employer' | 'both';
+  employeeRate: number | null;
+  employeeFixedAmount: number | null;
+  employeeCap: number | null;
+  employerRate: number | null;
+  employerFixedAmount: number | null;
+  employerCap: number | null;
+  basis: 'gross' | 'basic' | 'pensionable' | 'basic_housing_transport' | 'custom' | 'graduated';
+  basisDescription: string;
+  preTax: boolean;
+  mandatory: boolean;
+  mandatoryConditions: string | null;
+  notes: string | null;
+}
+
+export interface AllowanceType {
+  id: string;
+  name: string;
+  taxable: boolean;
+  partOfPensionable: boolean;
+  commonPercentageOfBasic: number | null;
+  notes: string | null;
+}
+
+export interface TaxRelief {
+  id: string;
+  name: string;
+  type: 'fixed' | 'percentage' | 'capped_percentage' | 'graduated';
+  value: number | null;
+  cap: number | null;
+  basis: string | null;
+  requiresDocumentation: boolean;
+  documentationDescription: string | null;
+  conditions: string | null;
+  notes: string | null;
+}
+
+export interface PayrollThreshold {
+  id: string;
+  name: string;
+  annualAmount: number;
+  description: string;
+}
+
+export interface CountryPayrollProfile {
+  countryCode: string;
+  countryName: string;
+  currency: string;
+  lastVerified: string;
+  effectiveDate: string;
+  sourceNotes: string;
+  fiscalYearStart: string;
+  taxYearStart: string;
+  taxSystem: TaxSystem;
+  statutoryDeductions: StatutoryDeduction[];
+  allowanceTypes: AllowanceType[];
+  taxReliefs: TaxRelief[];
+  thresholds: PayrollThreshold[];
+}
+
+export interface PayrollRateOverride {
+  deductionId: string;
+  field: 'employeeRate' | 'employerRate' | 'employeeCap' | 'employerCap';
+  originalValue: number;
+  overrideValue: number;
+  reason: string | null;
+  setAt: string;
+}
+
+// -- Engine inputs (camelCase domain objects the engine reads) --
+
+export interface SalaryStructure {
+  basic: number;
+  housing: number;
+  transport: number;
+  lunch?: number; // not pensionable; fully taxable
+  otherAllowances: { name: string; amount: number; taxable: boolean }[];
+  grossTotal: number;
+}
+
+export interface CustomDeduction {
+  id: string;
+  name: string;
+  amount: number;
+  frequency: 'once' | 'monthly' | 'until_cleared';
+  remainingBalance: number | null;
+  startMonth: string; // YYYY-MM
+  endMonth: string | null;
+}
+
+/** Minimal settings the engine reads (rate overrides only). */
+export interface PayrollSettingsInput {
+  payrollRateOverrides: PayrollRateOverride[];
+}
+
+/** Employee data the engine reads to compute a payslip. */
+export interface EmployeePayrollInput {
+  employeeId: string;
+  salaryType: 'monthly' | 'daily';
+  grossMonthlySalary: number | null;
+  dailyRate: number | null;
+  salaryStructure: SalaryStructure;
+  annualRentPaid: number | null;
+  pensionApplicable: boolean;
+  nhfApplicable: boolean;
+  nhisApplicable: boolean;
+  lifeInsurancePremium: number | null;
+  otherDeductions: CustomDeduction[];
+}
+
+// -- Engine output --
+
+export interface PayslipEarning {
+  name: string;
+  amount: number;
+}
+
+export interface PayslipDeduction {
+  name: string;
+  shortCode: string;
+  amount: number;
+  isStatutory: boolean;
+}
+
+export interface PayslipEmployerContribution {
+  name: string;
+  shortCode: string;
+  amount: number;
+}
+
+/** Computed payslip content (before persistence). */
+export interface ComputedPayslip {
+  employeeId: string;
+  period: string;
+  earnings: PayslipEarning[];
+  deductions: PayslipDeduction[];
+  employerContributions: PayslipEmployerContribution[];
+  grossPay: number;
+  totalDeductions: number;
+  netPay: number;
+  totalEmployerCost: number;
+  taxableIncome: number;
+  appliedReliefs: { name: string; amount: number }[];
+  assumptions: string[];
+}
+
+// -- DB row types (snake_case, as returned by the pg driver) --
+
+export interface PayrollSettingsRow {
+  id: string;
+  seller_id: string;
+  is_registered_employer: boolean;
+  employer_tax_id: string | null;
+  pension_enrolled: boolean;
+  pfa_name: string | null;
+  pfa_account_number: string | null;
+  state_of_operation: string | null;
+  nhf_enrolled: boolean;
+  nhis_enrolled: boolean;
+  pay_day: number;
+  rate_overrides: PayrollRateOverride[];
+  default_salary_structure: unknown | null;
+}
+
+export interface PayrollEmployeeRow {
+  id: string;
+  seller_id: string;
+  name: string;
+  salary_type: 'monthly' | 'daily';
+  gross_monthly_salary: string | null;
+  daily_rate: string | null;
+  salary_structure: SalaryStructure;
+  tax_id: string | null;
+  annual_rent_paid: string | null;
+  has_rent_documentation: boolean;
+  pension_applicable: boolean;
+  pension_pin: string | null;
+  nhf_applicable: boolean;
+  nhis_applicable: boolean;
+  life_insurance_premium: string | null;
+  other_deductions: CustomDeduction[];
+  bank_name: string | null;
+  bank_account_number: string | null;
+  start_date: string;
+  active: boolean;
+}
+
+export interface PayrollRunRow {
+  id: string;
+  seller_id: string;
+  period: string;
+  status: 'draft' | 'approved' | 'paid';
+  run_date: string;
+  approved_by: string | null;
+  approved_at: string | null;
+  total_gross_pay: string;
+  total_net_pay: string;
+  total_employee_deductions: string;
+  total_employer_costs: string;
+  total_paye: string;
+  total_pension: string;
+  employee_count: number;
+  profile_version_date: string;
+  notes: string | null;
+  date_created: string;
+}
+
+export interface PayslipRow {
+  id: string;
+  payroll_run_id: string;
+  employee_id: string;
+  employee_name: string;
+  period: string;
+  earnings: PayslipEarning[];
+  deductions: PayslipDeduction[];
+  employer_contributions: PayslipEmployerContribution[];
+  gross_pay: string;
+  total_deductions: string;
+  net_pay: string;
+  total_employer_cost: string;
+  taxable_income: string;
+  applied_reliefs: { name: string; amount: number }[];
+  assumptions: string[];
+}
+
+export interface RemittanceRow {
+  id: string;
+  seller_id: string;
+  payroll_run_id: string;
+  period: string;
+  deduction_type: string;
+  deduction_name: string;
+  total_amount: string;
+  due_date: string;
+  remittance_to: string;
+  status: 'pending' | 'remitted' | 'overdue';
+  remitted_date: string | null;
+  remitted_amount: string | null;
+  remitted_reference: string | null;
+}

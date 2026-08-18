@@ -26,6 +26,9 @@ Local Services booking section. Full spec: SPEC.md
 - Ratings require a prior Enquiry or Order on that specific listing.
 - Bank details shown on Order page only — never on public seller profile.
 - The 6-band ranking function lives ONLY in lib/ranking.ts — never duplicate it.
+- Nigeria payroll tax logic lives ONLY in lib/payroll/engine.ts + lib/payroll/nigeria-profile.ts
+  (Nigeria Tax Act 2025). Never duplicate PAYE/pension/relief rules in pages, routes, or SQL.
+  Payroll is a management tool, not a licensed processor — the UI must say so.
 
 ## How to run locally
 
@@ -90,6 +93,7 @@ Located in `supabase/migrations/`, numbered 001–022 (apply in numeric order):
 - 020: user phone2 + seller-application CAC certificate
 - 021: offline_sales + expenses
 - 022: seller name change
+- 023: payroll (settings, employees, runs, payslips, remittances) — Nigeria only
 
 Migration numbers are unique and sequential — keep them that way. If two
 migrations ever collide on a number, renumber the later one before committing.
