@@ -1,0 +1,937 @@
+</helmet>
+<div style="min-height:100vh;padding-top:54px;display:flex;justify-content:center;align-items:flex-start;background:#E6DABF;background-image:radial-gradient(circle at 20% 15%,rgba(27,42,74,0.05) 1.5px,transparent 2px),radial-gradient(circle at 70% 60%,rgba(27,42,74,0.04) 1.5px,transparent 2px);background-size:26px 26px;font-family:'Hanken Grotesk',sans-serif">
+  <div style="position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:60;display:flex;gap:3px;background:#1B2A4A;border-radius:999px;padding:4px;box-shadow:0 6px 20px rgba(27,42,74,0.3)">
+    <button style="{{ devMobileStyle }}" onclick="{{ setMobile }}">Mobile</button>
+    <button style="{{ devTabletStyle }}" onclick="{{ setTablet }}">Tablet</button>
+    <button style="{{ devDesktopStyle }}" onclick="{{ setDesktop }}">Desktop</button>
+  </div>
+  <div style="position:relative;background:#F7F1E3;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 12px 50px rgba(27,42,74,0.22);border-radius:14px;{{ frameStyle }}">
+
+    <sc-if value="{{ isWide }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;align-items:center;gap:18px;padding:13px 26px;background:#1B2A4A;color:#F7F1E3;flex-shrink:0">
+      <div style="display:flex;align-items:baseline;gap:1px;cursor:pointer" onclick="{{ goHome }}">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.5px">iBuy</span>
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.5px;color:#D9A02D">Naija</span>
+      </div>
+      <div style="flex:1;max-width:520px;display:flex;align-items:center;gap:9px;background:#F7F1E3;border-radius:11px;padding:10px 13px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#1B2A4A" stroke-width="2"></circle><path d="M16.5 16.5L21 21" stroke="#1B2A4A" stroke-width="2" stroke-linecap="round"></path></svg>
+        <span style="font-family:'Hanken Grotesk',sans-serif;font-size:14px;color:#8A7E66">Search Adire, suya spice, wigs…</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:22px">
+        <button onclick="{{ goHome }}" style="background:none;border:none;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:600;font-size:14px;color:{{ topMarketColor }}">Market</button>
+        <button onclick="{{ goServices }}" style="background:none;border:none;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:600;font-size:14px;color:{{ topSvcColor }}">Services</button>
+        <button onclick="{{ goShop }}" style="background:none;border:none;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:600;font-size:14px;color:{{ topShopColor }}">Shops</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;background:rgba(247,241,227,0.1);border-radius:999px;padding:7px 12px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.6-7-11a7 7 0 1114 0c0 5.4-7 11-7 11z" stroke="#D9A02D" stroke-width="2"></path><circle cx="12" cy="10" r="2.4" fill="#D9A02D"></circle></svg>
+        <span style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:600;color:#F7F1E3">{{ activeCity }}</span>
+      </div>
+      <button onclick="{{ goCart }}" style="position:relative;background:none;border:none;cursor:pointer;color:{{ topCartColor }};display:flex;align-items:center">
+        <svg width="23" height="23" viewBox="0 0 24 24" fill="none"><path d="M5 7h15l-1.5 9.5a2 2 0 01-2 1.7H8.5a2 2 0 01-2-1.7L5 5H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="9" cy="21" r="1.3" fill="currentColor"></circle><circle cx="17" cy="21" r="1.3" fill="currentColor"></circle></svg>
+        <sc-if value="{{ showCartBadge }}" hint-placeholder-val="{{ false }}">
+          <span style="position:absolute;top:-7px;right:-9px;min-width:17px;height:17px;border-radius:999px;background:#C1542C;color:#fff;font-family:'Hanken Grotesk',sans-serif;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px">{{ cartCount }}</span>
+        </sc-if>
+      </button>
+      <div style="display:flex;background:rgba(247,241,227,0.12);border-radius:999px;padding:3px">
+        <button style="{{ layoutAStyle }}" onclick="{{ setLayoutA }}">A</button>
+        <button style="{{ layoutBStyle }}" onclick="{{ setLayoutB }}">B</button>
+      </div>
+    </div>
+    </sc-if>
+
+    <div ref="{{ scrollRef }}" class="nbscroll" style="flex:1;overflow-y:auto;overflow-x:hidden">
+
+      <!-- ===================== HOME ===================== -->
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="Home" style="display:flex;flex-direction:column">
+
+        <!-- header (mobile only) -->
+        <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:14px 16px 12px;background:#1B2A4A;color:#F7F1E3;border-bottom-left-radius:18px;border-bottom-right-radius:18px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">
+            <div style="display:flex;align-items:baseline;gap:1px">
+              <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.5px">iBuy</span>
+              <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.5px;color:#D9A02D">Naija</span>
+            </div>
+            <div style="display:flex;background:rgba(247,241,227,0.12);border-radius:999px;padding:3px">
+              <button style="{{ layoutAStyle }}" onclick="{{ setLayoutA }}">A</button>
+              <button style="{{ layoutBStyle }}" onclick="{{ setLayoutB }}">B</button>
+            </div>
+          </div>
+          <div style="font-family:'Hanken Grotesk',sans-serif;font-size:12.5px;color:rgba(247,241,227,0.72);margin-bottom:12px">Every item made in Nigeria. Bought with trust.</div>
+          <div style="display:flex;align-items:center;gap:9px;background:#F7F1E3;border-radius:12px;padding:11px 13px">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#1B2A4A" stroke-width="2"></circle><path d="M16.5 16.5L21 21" stroke="#1B2A4A" stroke-width="2" stroke-linecap="round"></path></svg>
+            <span style="font-family:'Hanken Grotesk',sans-serif;font-size:14px;color:#8A7E66">Search Adire, suya spice, wigs…</span>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- LAYOUT A -->
+        <sc-if value="{{ isLayoutA }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column">
+          <!-- location priority -->
+          <div style="padding:14px 16px 4px">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:9px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.6-7-11a7 7 0 1114 0c0 5.4-7 11-7 11z" stroke="#C1542C" stroke-width="2"></path><circle cx="12" cy="10" r="2.4" fill="#C1542C"></circle></svg>
+              <span style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:#1B2A4A;font-weight:600">Showing <span style="color:#C1542C">{{ activeCity }}</span> first</span>
+            </div>
+            <div class="nbscroll" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px">
+              <sc-for list="{{ cityChips }}" as="c" hint-placeholder-count="6">
+                <button style="{{ c.style }}" onclick="{{ c.onClick }}">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <!-- category chips -->
+          <div class="nbscroll" style="display:flex;gap:8px;overflow-x:auto;padding:8px 16px 4px">
+            <sc-for list="{{ catChips }}" as="c" hint-placeholder-count="6">
+              <button style="{{ c.style }}" onclick="{{ c.onClick }}">{{ c.label }}</button>
+            </sc-for>
+          </div>
+          <!-- trust strip -->
+          <div style="margin:12px 16px 4px;background:#1B2A4A;border-radius:14px;padding:13px 14px;display:flex;gap:8px;justify-content:space-between">
+            <sc-for list="{{ trustItems }}" as="t" hint-placeholder-count="3">
+              <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:5px;flex:1">
+                <div style="color:#D9A02D">{{ t.icon }}</div>
+                <span style="font-family:'Hanken Grotesk',sans-serif;font-size:10.5px;line-height:1.25;color:#F7F1E3;font-weight:500">{{ t.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <!-- trending heading -->
+          <div style="display:flex;align-items:baseline;justify-content:space-between;padding:16px 16px 10px">
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;color:#1B2A4A">Made near you</span>
+            <span style="font-family:'Hanken Grotesk',sans-serif;font-size:12px;color:#8A7E66">{{ trendCountLabel }}</span>
+          </div>
+          <sc-if value="{{ hasLocal }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:{{ gridCols }};gap:12px;padding:0 16px">
+            <sc-for list="{{ trendLocal }}" as="p" hint-placeholder-count="6">
+              <dc-import name="ProductCard" product="{{ p }}" on-open="{{ openProduct }}" hint-size="100%,250px"></dc-import>
+            </sc-for>
+          </div>
+          </sc-if>
+          <sc-if value="{{ noLocal }}" hint-placeholder-val="{{ false }}">
+            <div style="margin:0 16px;padding:18px;background:#fff;border:1px dashed rgba(27,42,74,0.2);border-radius:12px;text-align:center;font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:#8A7E66">No makers in {{ activeCity }} for this filter yet — here's the rest of Nigeria.</div>
+          </sc-if>
+          <!-- divider -->
+          <sc-if value="{{ hasRest }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;align-items:center;gap:10px;padding:22px 16px 10px">
+            <div style="height:1px;flex:1;background:rgba(27,42,74,0.14)"></div>
+            <span style="font-family:'Hanken Grotesk',sans-serif;font-size:11.5px;font-weight:600;letter-spacing:0.4px;color:#8A7E66;text-transform:uppercase">More from across Nigeria</span>
+            <div style="height:1px;flex:1;background:rgba(27,42,74,0.14)"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:{{ gridCols }};gap:12px;padding:0 16px 8px">
+            <sc-for list="{{ trendRest }}" as="p" hint-placeholder-count="6">
+              <dc-import name="ProductCard" product="{{ p }}" on-open="{{ openProduct }}" hint-size="100%,250px"></dc-import>
+            </sc-for>
+          </div>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <!-- LAYOUT B -->
+        <sc-if value="{{ isLayoutB }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column">
+          <!-- editorial hero -->
+          <div style="margin:14px 16px 4px;background:linear-gradient(150deg,#1B2A4A,#2C426B);border-radius:18px;padding:18px 16px 16px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:-14px;right:-14px;width:118px;height:118px;opacity:0.9">
+              <dc-import name="NaijaSeal" hint-size="118px,118px" style="width:118px;height:118px"></dc-import>
+            </div>
+            <span style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#D9A02D">The home of Nigerian makers</span>
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:27px;line-height:1.06;color:#F7F1E3;margin-top:7px;max-width:230px;text-wrap:balance">Only the real thing. Made in Nigeria.</div>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:14px;background:rgba(247,241,227,0.94);border-radius:11px;padding:10px 12px;max-width:250px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#1B2A4A" stroke-width="2"></circle><path d="M16.5 16.5L21 21" stroke="#1B2A4A" stroke-width="2" stroke-linecap="round"></path></svg>
+              <span style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:#8A7E66">Search the market</span>
+            </div>
+          </div>
+          <!-- category tiles -->
+          <div style="padding:18px 16px 6px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;color:#1B2A4A">Shop by craft</div>
+          <div style="display:grid;grid-template-columns:{{ catCols }};gap:9px;padding:0 16px">
+            <sc-for list="{{ catTiles }}" as="t" hint-placeholder-count="9">
+              <button onclick="{{ t.onClick }}" style="position:relative;aspect-ratio:1.5/1;border:none;border-radius:11px;overflow:hidden;cursor:pointer;padding:0;background:#1B2A4A;background-image:{{ t.bg }}">
+                <span style="position:absolute;left:7px;bottom:6px;right:5px;text-align:left;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:10px;line-height:1.12;color:#F7F1E3;text-wrap:pretty">{{ t.label }}</span>
+              </button>
+            </sc-for>
+          </div>
+          <!-- location priority banner -->
+          <div style="margin:18px 16px 4px;background:#C1542C;border-radius:13px;padding:11px 14px;display:flex;align-items:center;gap:9px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.6-7-11a7 7 0 1114 0c0 5.4-7 11-7 11z" stroke="#F7F1E3" stroke-width="2"></path><circle cx="12" cy="10" r="2.4" fill="#F7F1E3"></circle></svg>
+            <span style="font-family:'Hanken Grotesk',sans-serif;font-size:12.5px;color:#F7F1E3;font-weight:500;flex:1">Prioritising makers in <b>{{ activeCity }}</b> — others show below</span>
+          </div>
+          <div class="nbscroll" style="display:flex;gap:8px;overflow-x:auto;padding:10px 16px 4px">
+            <sc-for list="{{ cityChips }}" as="c" hint-placeholder-count="6">
+              <button style="{{ c.style }}" onclick="{{ c.onClick }}">{{ c.label }}</button>
+            </sc-for>
+          </div>
+          <!-- top picks rail -->
+          <div style="padding:14px 16px 8px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;color:#1B2A4A">Top picks near you</div>
+          <sc-if value="{{ hasLocal }}" hint-placeholder-val="{{ true }}">
+          <div class="nbscroll" style="display:flex;gap:12px;overflow-x:auto;padding:0 16px 6px">
+            <sc-for list="{{ trendLocal }}" as="p" hint-placeholder-count="4">
+              <dc-import name="ProductCard" product="{{ p }}" on-open="{{ openProduct }}" hint-size="160px,250px" style="min-width:160px;width:160px"></dc-import>
+            </sc-for>
+          </div>
+          </sc-if>
+          <!-- across Nigeria grid -->
+          <sc-if value="{{ hasRest }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:16px 16px 8px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;color:#1B2A4A">Trending across Nigeria</div>
+          <div style="display:grid;grid-template-columns:{{ gridCols }};gap:12px;padding:0 16px 8px">
+            <sc-for list="{{ trendRest }}" as="p" hint-placeholder-count="6">
+              <dc-import name="ProductCard" product="{{ p }}" on-open="{{ openProduct }}" hint-size="100%,250px"></dc-import>
+            </sc-for>
+          </div>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <div style="height:18px"></div>
+      </div>
+      </sc-if>
+
+      <!-- ===================== LISTING ===================== -->
+      <sc-if value="{{ isListing }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="Listing detail" style="display:flex;flex-direction:column;{{ narrowWrap }}">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;position:sticky;top:0;background:rgba(247,241,227,0.92);backdrop-filter:blur(6px);z-index:5">
+          <button onclick="{{ goHome }}" style="display:flex;align-items:center;gap:5px;background:#fff;border:1px solid rgba(27,42,74,0.12);border-radius:999px;padding:8px 12px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:600;color:#1B2A4A">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#1B2A4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Market
+          </button>
+          <button onclick="{{ enquireCurrent }}" style="display:flex;align-items:center;gap:5px;background:#fff;border:1px solid rgba(27,42,74,0.12);border-radius:999px;padding:8px 12px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:600;color:#1B2A4A">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 18V7a2 2 0 012-2h12a2 2 0 012 2v7a2 2 0 01-2 2H8l-4 3z" stroke="#1B2A4A" stroke-width="2" stroke-linejoin="round"></path></svg>Enquire
+          </button>
+        </div>
+        <!-- image -->
+        <div style="position:relative;margin:2px 16px 0;aspect-ratio:1/1;border-radius:18px;overflow:hidden;background:#1B2A4A;background-image:{{ prod.bg }}">
+          <div style="position:absolute;left:14px;bottom:14px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:rgba(247,241,227,0.6)">{{ prod.catShort }}</div>
+          <dc-import name="NaijaSeal" hint-size="86px,86px" style="position:absolute;top:12px;right:12px;width:86px;height:86px"></dc-import>
+          <sc-if value="{{ prodVerified }}" hint-placeholder-val="{{ true }}">
+            <div style="position:absolute;top:16px;left:14px;display:flex;align-items:center;gap:4px;background:#1B2A4A;color:#fff;padding:5px 10px 5px 7px;border-radius:20px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 1.9 3 .2.9 2.9 2.3 2-1 2.9 1 2.9-2.3 2-.9 2.9-3 .2L12 22l-2.4-1.9-3-.2-.9-2.9-2.3-2 1-2.9-1-2.9 2.3-2 .9-2.9 3-.2z" fill="#D9A02D"></path><path d="M8.5 12.2l2.3 2.3 4.5-4.6" stroke="#1B2A4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:10px">Verified Seller</span>
+            </div>
+          </sc-if>
+        </div>
+        <!-- info -->
+        <div style="padding:16px 16px 4px">
+          <span style="font-family:'Hanken Grotesk',sans-serif;font-size:12px;font-weight:600;color:#C1542C;text-transform:uppercase;letter-spacing:0.6px">{{ prod.category }}</span>
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:24px;line-height:1.12;color:#1B2A4A;margin:6px 0 8px;text-wrap:pretty">{{ prod.name }}</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;color:#1B2A4A">{{ prod.priceFmt }}</span>
+            <span style="display:flex;align-items:center;gap:3px;font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:600;color:#1B2A4A"><span style="color:#D9A02D">★</span>{{ prod.rating }} · {{ prod.soldLabel }}</span>
+          </div>
+        </div>
+        <!-- payment trust note -->
+        <div style="margin:12px 16px 0;display:flex;align-items:center;gap:9px;background:#F1E7D2;border:1px solid rgba(217,160,45,0.4);border-radius:11px;padding:10px 12px">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" stroke="#D9A02D" stroke-width="2" stroke-linejoin="round"></path><path d="M9 12l2 2 4-4" stroke="#D9A02D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <span style="font-family:'Hanken Grotesk',sans-serif;font-size:12px;color:#7A5A1E;line-height:1.3">Pay the seller directly by bank transfer. Account details shown at checkout.</span>
+        </div>
+        <!-- quantity -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 16px 6px">
+          <span style="font-family:'Hanken Grotesk',sans-serif;font-size:14px;font-weight:600;color:#1B2A4A">Quantity</span>
+          <div style="display:flex;align-items:center;gap:0;border:1px solid rgba(27,42,74,0.16);border-radius:999px;overflow:hidden;background:#fff">
+            <button onclick="{{ decQty }}" style="width:40px;height:40px;border:none;background:none;cursor:pointer;font-size:20px;color:#1B2A4A">−</button>
+            <span style="min-width:34px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;color:#1B2A4A">{{ qty }}</span>
+            <button onclick="{{ incQty }}" style="width:40px;height:40px;border:none;background:none;cursor:pointer;font-size:20px;color:#1B2A4A">+</button>
+          </div>
+        </div>
+        <!-- description -->
+        <div style="padding:10px 16px 0;font-family:'Hanken Grotesk',sans-serif;font-size:14px;line-height:1.55;color:#4A4334">{{ prod.desc }}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;padding:12px 16px 0">
+          <sc-for list="{{ prodHighlights }}" as="h" hint-placeholder-count="3">
+            <span style="font-family:'Hanken Grotesk',sans-serif;font-size:11.5px;font-weight:600;color:#1B2A4A;background:#EFE6D2;border-radius:8px;padding:6px 10px">{{ h }}</span>
+          </sc-for>
+        </div>
+        <!-- seller credibility block (equal weight) -->
+        <div style="margin:20px 16px 0;background:#fff;border:1px solid rgba(27,42,74,0.12);border-radius:16px;overflow:hidden">
+          <div style="padding:12px 14px 12px;display:flex;gap:12px;align-items:center;border-bottom:1px solid rgba(27,42,74,0.08)">
+            <div style="width:48px;height:48px;border-radius:12px;background:#1B2A4A;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:#D9A02D;flex-shrink:0">{{ spInitials }}</div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:6px">
+                <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;color:#1B2A4A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ spSellerName }}</span>
+                <sc-if value="{{ spVerified }}" hint-placeholder-val="{{ true }}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0"><path d="M12 2l2.4 1.9 3 .2.9 2.9 2.3 2-1 2.9 1 2.9-2.3 2-.9 2.9-3 .2L12 22l-2.4-1.9-3-.2-.9-2.9-2.3-2 1-2.9-1-2.9 2.3-2 .9-2.9 3-.2z" fill="#1B2A4A"></path><path d="M8.5 12.2l2.3 2.3 4.5-4.6" stroke="#D9A02D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </sc-if>
+              </div>
+              <div style="font-family:'Hanken Grotesk',sans-serif;font-size:12px;color:#8A7E66;margin-top:1px">{{ spCity }} · responds {{ spResponse }}</div>
+            </div>
+          </div>
+          <div style="display:flex">
+            <div style="flex:1;padding:11px 8px;text-align:center;border-right:1px solid rgba(27,42,74,0.08)">
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;color:#1B2A4A"><span style="color:#D9A02D">★</span> {{ spRating }}</div>
+              <div style="font-family:'Hanken Grotesk',sans-serif;font-size:10.5px;color:#8A7E66;margin-top:2px">Rating</div>
+            </div>
+            <div style="flex:1;padding:11px 8px;text-align:center;border-right:1px solid rgba(27,42,74,0.08)">
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;color:#1B2A4A">{{ spSold }}</div>
+              <div style="font-family:'Hanken Grotesk',sans-serif;font-size:10.5px;color:#8A7E66;margin-top:2px">Sold</div>
+            </div>
+            <div style="flex:1;padding:11px 8px;text-align:center">
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;color:#1B2A4A">{{ spJoined }}</div>
+              <div style="font-family:'Hanken Grotesk',sans-serif;font-size:10.5px;color:#8A7E66;margin-top:2px">On iBuyNaija</div>
+            </div>
+          </div>
+          <button onclick="{{ openSpShop }}" style="width:100%;border:none;border-top:1px solid rgba(27,42,74,0.08);background:#F7F1E3;padding:12px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:13px;color:#1B2A4A">View seller's shop →</button>
+        </div>
+        <sc-if value="{{ isWide }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:12px;padding:22px 16px 4px">
+          <button onclick="{{ enquireCurrent }}" style="flex:0 0 auto;display:flex;align-items:center;gap:6px;background:#fff;border:1.5px solid #1B2A4A;border-radius:13px;padding:13px 18px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:14px;color:#1B2A4A"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 18V7a2 2 0 012-2h12a2 2 0 012 2v7a2 2 0 01-2 2H8l-4 3z" stroke="#1B2A4A" stroke-width="2" stroke-linejoin="round"></path></svg>Enquire</button>
+          <button onclick="{{ addCurrent }}" style="flex:1;background:#C1542C;border:none;border-radius:13px;padding:13px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:15px;color:#fff;box-shadow:0 6px 16px rgba(193,84,44,0.34)">Add to cart · {{ prod.priceFmt }}</button>
+        </div>
+        </sc-if>
+        <div style="height:96px"></div>
+      </div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ true }}">
+      <!-- sticky action bar -->
+      <div style="position:absolute;left:0;right:0;bottom:64px;display:flex;gap:10px;padding:12px 16px;background:linear-gradient(to top,#F7F1E3 70%,rgba(247,241,227,0));pointer-events:none">
+        <button onclick="{{ enquireCurrent }}" style="pointer-events:auto;flex:0 0 auto;display:flex;align-items:center;gap:6px;background:#fff;border:1.5px solid #1B2A4A;border-radius:13px;padding:13px 16px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:14px;color:#1B2A4A">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 18V7a2 2 0 012-2h12a2 2 0 012 2v7a2 2 0 01-2 2H8l-4 3z" stroke="#1B2A4A" stroke-width="2" stroke-linejoin="round"></path></svg>Enquire
+        </button>
+        <button onclick="{{ addCurrent }}" style="pointer-events:auto;flex:1;background:#C1542C;border:none;border-radius:13px;padding:13px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:15px;color:#fff;box-shadow:0 6px 16px rgba(193,84,44,0.34)">Add to cart · {{ prod.priceFmt }}</button>
+      </div>
+      </sc-if>
+      </sc-if>
+
+      <!-- ===================== CART / CHECKOUT ===================== -->
+      <sc-if value="{{ isCart }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="Cart and checkout" style="display:flex;flex-direction:column;min-height:100%;{{ narrowWrap }}">
+        <div style="padding:16px 16px 12px;background:#1B2A4A;color:#F7F1E3;border-bottom-left-radius:18px;border-bottom-right-radius:18px">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px">Checkout</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:12px">
+            <span style="display:flex;align-items:center;gap:5px;font-family:'Hanken Grotesk',sans-serif;font-size:12px;font-weight:600;color:{{ stepReviewColor }}"><span style="width:18px;height:18px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;background:{{ stepReviewBg }};color:{{ stepReviewFg }}">1</span>Review</span>
+            <span style="flex:1;height:1px;background:rgba(247,241,227,0.25)"></span>
+            <span style="display:flex;align-items:center;gap:5px;font-family:'Hanken Grotesk',sans-serif;font-size:12px;font-weight:600;color:{{ stepPayColor }}"><span style="width:18px;height:18px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;background:{{ stepPayBg }};color:{{ stepPayFg }}">2</span>Pay</span>
+            <span style="flex:1;height:1px;background:rgba(247,241,227,0.25)"></span>
+            <span style="display:flex;align-items:center;gap:5px;font-family:'Hanken Grotesk',sans-serif;font-size:12px;font-weight:600;color:{{ stepDoneColor }}"><span style="width:18px;height:18px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;background:{{ stepDoneBg }};color:{{ stepDoneFg }}">3</span>Done</span>
+          </div>
+        </div>
+
+        <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ true }}">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 30px;gap:14px">
+            <div style="width:72px;height:72px;border-radius:999px;background:#EFE6D2;display:flex;align-items:center;justify-content:center">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M5 7h15l-1.5 9.5a2 2 0 01-2 1.7H8.5a2 2 0 01-2-1.7L5 5H3" stroke="#1B2A4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="9" cy="21" r="1.4" fill="#1B2A4A"></circle><circle cx="17" cy="21" r="1.4" fill="#1B2A4A"></circle></svg>
+            </div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:18px;color:#1B2A4A">Your cart is empty</div>
+            <div style="font-family:'Hanken Grotesk',sans-serif;font-size:13.5px;color:#8A7E66;max-width:240px">Find something made by a Nigerian maker and it'll show up here.</div>
+            <button onclick="{{ goHome }}" style="margin-top:6px;background:#C1542C;border:none;border-radius:12px;padding:13px 22px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:14px;color:#fff">Browse the market</button>
+          </div>
+        </sc-if>
+
+        <!-- STEP: REVIEW -->
+        <sc-if value="{{ showReview }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:14px 16px 0;display:flex;flex-direction:column;gap:14px">
+          <div style="font-family:'Hanken Grotesk',sans-serif;font-size:12.5px;color:#8A7E66">Your order is grouped by seller — you pay each maker directly.</div>
+          <sc-for list="{{ cartGroups }}" as="g" hint-placeholder-count="2">
+            <div style="background:#fff;border:1px solid rgba(27,42,74,0.12);border-radius:16px;overflow:hidden">
+              <div style="display:flex;align-items:center;gap:9px;padding:11px 13px;background:#F7F1E3;border-bottom:1px solid rgba(27,42,74,0.08)">
+                <div style="width:32px;height:32px;border-radius:9px;background:#1B2A4A;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#D9A02D">{{ g.initials }}</div>
+                <div style="flex:1;display:flex;align-items:center;gap:5px">
+                  <span style="font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:13.5px;color:#1B2A4A">{{ g.sellerName }}</span>
+                  <sc-if value="{{ g.verified }}" hint-placeholder-val="{{ true }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 1.9 3 .2.9 2.9 2.3 2-1 2.9 1 2.9-2.3 2-.9 2.9-3 .2L12 22l-2.4-1.9-3-.2-.9-2.9-2.3-2 1-2.9-1-2.9 2.3-2 .9-2.9 3-.2z" fill="#1B2A4A"></path><path d="M8.5 12.2l2.3 2.3 4.5-4.6" stroke="#D9A02D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if>
+                </div>
+                <span style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;color:#8A7E66">{{ g.city }}</span>
+              </div>
+              <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
+                <div style="display:flex;gap:11px;align-items:center;padding:11px 13px;border-bottom:1px solid rgba(27,42,74,0.06)">
+                  <div style="width:48px;height:48px;border-radius:10px;background:#1B2A4A;background-image:{{ it.bg }};flex-shrink:0"></div>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-family:'Hanken Grotesk',sans-serif;font-weight:600;font-size:13px;color:#1B2A4A;line-height:1.2">{{ it.name }}</div>
+                    <div style="font-family:'Hanken Grotesk',sans-serif;font-size:12px;color:#8A7E66;margin-top:3px">{{ it.priceFmt }} each</div>
+                  </div>
+                  <div style="display:flex;align-items:center;border:1px solid rgba(27,42,74,0.16);border-radius:999px;background:#fff">
+                    <button onclick="{{ it.dec }}" style="width:30px;height:30px;border:none;background:none;cursor:pointer;font-size:16px;color:#1B2A4A">−</button>
+                    <span style="min-width:20px;text-align:center;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:13px;color:#1B2A4A">{{ it.qty }}</span>
+                    <button onclick="{{ it.inc }}" style="width:30px;height:30px;border:none;background:none;cursor:pointer;font-size:16px;color:#1B2A4A">+</button>
+                  </div>
+                </div>
+              </sc-for>
+              <!-- seller bank details -->
+              <div style="margin:11px 13px;background:#F1E7D2;border:1px solid rgba(217,160,45,0.4);border-radius:11px;padding:11px 12px">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="2" stroke="#D9A02D" stroke-width="2"></rect><path d="M3 10h18" stroke="#D9A02D" stroke-width="2"></path></svg>
+                  <span style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.3px;text-transform:uppercase;color:#7A5A1E">Pay this seller directly</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:#1B2A4A;margin-bottom:3px"><span style="color:#8A7E66">{{ g.bankName }}</span><span style="font-weight:700;letter-spacing:0.5px">{{ g.bankAcct }}</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-family:'Hanken Grotesk',sans-serif;font-size:12px;color:#8A7E66"><span>{{ g.accountName }}</span><button onclick="{{ g.copy }}" style="background:none;border:none;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-size:11.5px;font-weight:700;color:#C1542C;padding:0">Copy</button></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:0 13px 12px;font-family:'Hanken Grotesk',sans-serif;font-size:13px"><span style="color:#8A7E66">Subtotal</span><span style="font-weight:700;color:#1B2A4A">{{ g.subtotalFmt }}</span></div>
+            </div>
+          </sc-for>
+
+          <!-- delivery / pickup -->
+          <div style="background:#fff;border:1px solid rgba(27,42,74,0.12);border-radius:16px;padding:14px">
+            <div style="font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:14px;color:#1B2A4A;margin-bottom:10px">How do you want it?</div>
+            <div style="display:flex;gap:10px">
+              <button onclick="{{ setDeliveryMode }}" style="{{ deliveryStyle }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><circle cx="7" cy="17" r="1.6" fill="currentColor"></circle><circle cx="18" cy="17" r="1.6" fill="currentColor"></circle></svg>
+                <span>Delivery</span>
+              </button>
+              <button onclick="{{ setPickupMode }}" style="{{ pickupStyle }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 9h14l-1 10H6L5 9zM8 9V7a4 4 0 018 0v2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg>
+                <span>Pickup</span>
+              </button>
+            </div>
+          </div>
+
+          <div style="background:#1B2A4A;border-radius:16px;padding:15px;display:flex;align-items:center;justify-content:space-between">
+            <div><div style="font-family:'Hanken Grotesk',sans-serif;font-size:12px;color:rgba(247,241,227,0.7)">Total ({{ itemCountLabel }})</div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:23px;color:#F7F1E3">{{ grandFmt }}</div></div>
+            <button onclick="{{ goPay }}" style="background:#C1542C;border:none;border-radius:12px;padding:13px 18px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:14px;color:#fff">Proceed to pay →</button>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- STEP: PAY -->
+        <sc-if value="{{ showPay }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:14px 16px 0;display:flex;flex-direction:column;gap:14px">
+          <div style="background:#F1E7D2;border:1px solid rgba(217,160,45,0.4);border-radius:13px;padding:13px 14px;font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:#7A5A1E;line-height:1.45">Send a transfer to <b>each seller below</b> using your bank app, then confirm. Sellers ship once they see your payment.</div>
+          <sc-for list="{{ cartGroups }}" as="g" hint-placeholder-count="2">
+            <div style="background:#fff;border:1px solid rgba(27,42,74,0.12);border-radius:14px;padding:13px 14px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
+                <div style="display:flex;align-items:center;gap:6px"><span style="font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:13.5px;color:#1B2A4A">{{ g.sellerName }}</span><sc-if value="{{ g.verified }}" hint-placeholder-val="{{ true }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 1.9 3 .2.9 2.9 2.3 2-1 2.9 1 2.9-2.3 2-.9 2.9-3 .2L12 22l-2.4-1.9-3-.2-.9-2.9-2.3-2 1-2.9-1-2.9 2.3-2 .9-2.9 3-.2z" fill="#1B2A4A"></path><path d="M8.5 12.2l2.3 2.3 4.5-4.6" stroke="#D9A02D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if></div>
+                <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;color:#C1542C">{{ g.subtotalFmt }}</span>
+              </div>
+              <div style="background:#F7F1E3;border-radius:10px;padding:10px 12px;font-family:'Hanken Grotesk',sans-serif">
+                <div style="display:flex;justify-content:space-between;font-size:13px;color:#1B2A4A;margin-bottom:3px"><span style="color:#8A7E66">{{ g.bankName }}</span><span style="font-weight:700;letter-spacing:0.5px">{{ g.bankAcct }}</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#8A7E66"><span>{{ g.accountName }}</span><button onclick="{{ g.copy }}" style="background:none;border:none;cursor:pointer;font-size:11.5px;font-weight:700;color:#C1542C;padding:0">Copy</button></div>
+              </div>
+            </div>
+          </sc-for>
+          <!-- receipt upload -->
+          <div onclick="{{ toggleReceipt }}" style="{{ receiptBoxStyle }}">
+            <sc-if value="{{ receipt }}" hint-placeholder-val="{{ false }}">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#1B8A5B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <div><div style="font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:13.5px;color:#1B8A5B">receipt.jpg attached</div><div style="font-family:'Hanken Grotesk',sans-serif;font-size:11.5px;color:#8A7E66">Tap to remove</div></div>
+            </sc-if>
+            <sc-if value="{{ noReceipt }}" hint-placeholder-val="{{ true }}">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L8 8m4-4l4 4" stroke="#8A7E66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5 16v2a2 2 0 002 2h10a2 2 0 002-2v-2" stroke="#8A7E66" stroke-width="2" stroke-linecap="round"></path></svg>
+              <div><div style="font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:13.5px;color:#1B2A4A">Upload transfer receipt</div><div style="font-family:'Hanken Grotesk',sans-serif;font-size:11.5px;color:#8A7E66">Optional — speeds up confirmation</div></div>
+            </sc-if>
+          </div>
+          <div style="display:flex;gap:10px">
+            <button onclick="{{ backToReview }}" style="flex:0 0 auto;background:#fff;border:1.5px solid rgba(27,42,74,0.2);border-radius:13px;padding:14px 16px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:14px;color:#1B2A4A">Back</button>
+            <button onclick="{{ placeOrder }}" style="flex:1;background:#C1542C;border:none;border-radius:13px;padding:14px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:15px;color:#fff">I've sent the transfer(s)</button>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- STEP: DONE -->
+        <sc-if value="{{ showDone }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:30px 22px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+          <div style="width:78px;height:78px;border-radius:999px;background:#1B8A5B;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(27,138,91,0.3)">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;color:#1B2A4A">Payment submitted</div>
+          <div style="font-family:'Hanken Grotesk',sans-serif;font-size:13.5px;color:#8A7E66;max-width:270px;line-height:1.5">We've notified your sellers. Each one confirms your transfer, then ships your order. You'll get updates by SMS &amp; WhatsApp.</div>
+          <div style="width:100%;background:#fff;border:1px solid rgba(27,42,74,0.12);border-radius:14px;padding:14px;text-align:left;margin-top:4px">
+            <div style="display:flex;justify-content:space-between;font-family:'Hanken Grotesk',sans-serif;font-size:13px;margin-bottom:7px"><span style="color:#8A7E66">Order total</span><span style="font-weight:700;color:#1B2A4A">{{ grandFmt }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-family:'Hanken Grotesk',sans-serif;font-size:13px;margin-bottom:7px"><span style="color:#8A7E66">Sellers</span><span style="font-weight:700;color:#1B2A4A">{{ groupCountLabel }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-family:'Hanken Grotesk',sans-serif;font-size:13px"><span style="color:#8A7E66">Fulfilment</span><span style="font-weight:700;color:#1B2A4A">{{ deliveryLabel }}</span></div>
+          </div>
+          <button onclick="{{ newOrder }}" style="margin-top:6px;width:100%;background:#1B2A4A;border:none;border-radius:13px;padding:14px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:15px;color:#F7F1E3">Back to the market</button>
+        </div>
+        </sc-if>
+        <div style="height:20px"></div>
+      </div>
+      </sc-if>
+
+      <!-- ===================== SELLER PROFILE ===================== -->
+      <sc-if value="{{ isSeller }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="Seller profile" style="display:flex;flex-direction:column">
+        <div style="position:relative;height:124px;background-image:{{ selBanner }};background-color:#1B2A4A">
+          <button onclick="{{ backFromSeller }}" style="position:absolute;top:12px;left:12px;width:36px;height:36px;border-radius:999px;background:rgba(247,241,227,0.92);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#1B2A4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <dc-import name="NaijaSeal" hint-size="74px,74px" style="position:absolute;top:10px;right:14px;width:74px;height:74px"></dc-import>
+        </div>
+        <div style="padding:0 16px;margin-top:-34px">
+          <div style="display:flex;align-items:flex-end;gap:12px">
+            <div style="width:72px;height:72px;border-radius:18px;background:#1B2A4A;border:3px solid #F7F1E3;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;color:#D9A02D;flex-shrink:0">{{ selInitials }}</div>
+            <div style="padding-bottom:4px;flex:1">
+              <div style="display:flex;align-items:center;gap:7px">
+                <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:21px;color:#1B2A4A">{{ selName }}</span>
+              </div>
+            </div>
+          </div>
+          <sc-if value="{{ selVerified }}" hint-placeholder-val="{{ true }}">
+            <div style="display:inline-flex;align-items:center;gap:6px;background:#1B2A4A;border-radius:999px;padding:6px 12px 6px 8px;margin-top:10px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 1.9 3 .2.9 2.9 2.3 2-1 2.9 1 2.9-2.3 2-.9 2.9-3 .2L12 22l-2.4-1.9-3-.2-.9-2.9-2.3-2 1-2.9-1-2.9 2.3-2 .9-2.9 3-.2z" fill="#D9A02D"></path><path d="M8.5 12.2l2.3 2.3 4.5-4.6" stroke="#1B2A4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:12px;color:#F7F1E3">Verified Seller</span>
+            </div>
+          </sc-if>
+          <div style="display:flex;align-items:center;gap:5px;margin-top:10px;font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:#8A7E66">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.6-7-11a7 7 0 1114 0c0 5.4-7 11-7 11z" stroke="#C1542C" stroke-width="2"></path><circle cx="12" cy="10" r="2.4" fill="#C1542C"></circle></svg>{{ selCity }}, Nigeria
+          </div>
+          <div style="font-family:'Hanken Grotesk',sans-serif;font-size:14px;line-height:1.5;color:#4A4334;margin-top:10px">{{ selTagline }}</div>
+        </div>
+        <!-- stats -->
+        <div style="display:flex;margin:16px 16px 0;background:#fff;border:1px solid rgba(27,42,74,0.12);border-radius:14px;overflow:hidden">
+          <div style="flex:1;padding:12px 6px;text-align:center;border-right:1px solid rgba(27,42,74,0.08)"><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:#1B2A4A"><span style="color:#D9A02D">★</span>{{ selRating }}</div><div style="font-family:'Hanken Grotesk',sans-serif;font-size:10.5px;color:#8A7E66;margin-top:2px">Rating</div></div>
+          <div style="flex:1;padding:12px 6px;text-align:center;border-right:1px solid rgba(27,42,74,0.08)"><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:#1B2A4A">{{ selSold }}</div><div style="font-family:'Hanken Grotesk',sans-serif;font-size:10.5px;color:#8A7E66;margin-top:2px">Items sold</div></div>
+          <div style="flex:1;padding:12px 6px;text-align:center"><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:#1B2A4A">{{ selJoined }}</div><div style="font-family:'Hanken Grotesk',sans-serif;font-size:10.5px;color:#8A7E66;margin-top:2px">Since</div></div>
+        </div>
+        <!-- shareable link -->
+        <div style="margin:14px 16px 0;background:#1B2A4A;border-radius:14px;padding:13px 14px">
+          <div style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.4px;text-transform:uppercase;color:rgba(247,241,227,0.6);margin-bottom:7px">Share this shop</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="flex:1;background:rgba(247,241,227,0.1);border-radius:9px;padding:9px 11px;font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:#F7F1E3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ shareLink }}</div>
+            <button onclick="{{ copyLink }}" style="background:#D9A02D;border:none;border-radius:9px;padding:9px 13px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:12.5px;color:#1B2A4A">Copy</button>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:9px">
+            <button onclick="{{ shareWA }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(247,241,227,0.1);border:none;border-radius:9px;padding:9px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:600;font-size:12.5px;color:#F7F1E3"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M3 21l1.7-5A8 8 0 1112 20a8 8 0 01-4-1l-5 2z" stroke="#25D366" stroke-width="2" stroke-linejoin="round"></path></svg>WhatsApp</button>
+            <button onclick="{{ shareWA }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(247,241,227,0.1);border:none;border-radius:9px;padding:9px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:600;font-size:12.5px;color:#F7F1E3"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="#F7F1E3" stroke-width="2"></rect><circle cx="12" cy="12" r="3.6" stroke="#F7F1E3" stroke-width="2"></circle><circle cx="17" cy="7" r="1.2" fill="#F7F1E3"></circle></svg>Instagram</button>
+          </div>
+        </div>
+        <!-- listings -->
+        <div style="padding:18px 16px 10px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:18px;color:#1B2A4A">From this shop</div>
+        <div style="display:grid;grid-template-columns:{{ gridCols }};gap:12px;padding:0 16px">
+          <sc-for list="{{ sellerProducts }}" as="p" hint-placeholder-count="4">
+            <dc-import name="ProductCard" product="{{ p }}" on-open="{{ openProduct }}" hint-size="100%,250px"></dc-import>
+          </sc-for>
+        </div>
+        <!-- social proof -->
+        <div style="padding:20px 16px 10px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:18px;color:#1B2A4A">What buyers say</div>
+        <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px">
+          <sc-for list="{{ reviews }}" as="r" hint-placeholder-count="3">
+            <div style="background:#fff;border:1px solid rgba(27,42,74,0.1);border-radius:13px;padding:12px 13px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                <div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:999px;background:#EFE6D2;display:flex;align-items:center;justify-content:center;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:11px;color:#1B2A4A">{{ r.ini }}</div><div><div style="font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:12.5px;color:#1B2A4A">{{ r.n }}</div><div style="font-family:'Hanken Grotesk',sans-serif;font-size:10.5px;color:#8A7E66">{{ r.c }}</div></div></div>
+                <span style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;color:#D9A02D">★★★★★</span>
+              </div>
+              <div style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;line-height:1.45;color:#4A4334">{{ r.t }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="height:20px"></div>
+      </div>
+      </sc-if>
+
+      <!-- ===================== SERVICES ===================== -->
+      <sc-if value="{{ isServices }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="Local services" style="display:flex;flex-direction:column">
+        <!-- list view -->
+        <sc-if value="{{ svcListView }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column">
+          <div style="padding:16px 16px 14px;background:#2A3340;color:#F7F1E3;border-bottom-left-radius:18px;border-bottom-right-radius:18px">
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px">Local Services</div>
+            <div style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:rgba(247,241,227,0.72);margin-top:3px">Book trusted Nigerian pros near you.</div>
+            <div style="display:flex;align-items:flex-start;gap:8px;margin-top:12px;background:rgba(247,241,227,0.08);border-radius:10px;padding:10px 12px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9" stroke="#A9B4C2" stroke-width="2"></circle><path d="M12 11v5M12 8h.01" stroke="#A9B4C2" stroke-width="2" stroke-linecap="round"></path></svg>
+              <span style="font-family:'Hanken Grotesk',sans-serif;font-size:11.5px;line-height:1.4;color:rgba(247,241,227,0.85)">Services are rendered work — not physical goods — so the Made-in-Nigeria seal doesn't apply here.</span>
+            </div>
+          </div>
+          <div class="nbscroll" style="display:flex;gap:8px;overflow-x:auto;padding:14px 16px 6px">
+            <sc-for list="{{ svcChips }}" as="c" hint-placeholder-count="5">
+              <button style="{{ c.style }}" onclick="{{ c.onClick }}">{{ c.label }}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:11px;padding:8px 16px 0">
+            <sc-for list="{{ svcProviders }}" as="p" hint-placeholder-count="5">
+              <button onclick="{{ p.onClick }}" style="display:flex;gap:12px;align-items:center;text-align:left;background:#fff;border:1px solid rgba(42,51,64,0.14);border-radius:15px;padding:12px;cursor:pointer">
+                <div style="width:54px;height:54px;border-radius:13px;background:#2A3340;background-image:{{ p.bg }};display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:#F7F1E3;flex-shrink:0">{{ p.initials }}</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15.5px;color:#2A3340">{{ p.name }}</div>
+                  <div style="font-family:'Hanken Grotesk',sans-serif;font-size:12px;color:#7B8290;margin-top:2px">{{ p.service }} · {{ p.city }}</div>
+                  <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+                    <span style="font-family:'Hanken Grotesk',sans-serif;font-size:11.5px;font-weight:600;color:#2A3340"><span style="color:#D9A02D">★</span> {{ p.rating }}</span>
+                    <span style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;color:#7B8290">{{ p.jobsLabel }}</span>
+                    <span style="{{ p.tagStyle }}">{{ p.typeLabel }}</span>
+                  </div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex-shrink:0"><path d="M9 5l7 7-7 7" stroke="#B6BCC6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              </button>
+            </sc-for>
+          </div>
+          <div style="height:20px"></div>
+        </div>
+        </sc-if>
+
+        <!-- detail / booking view -->
+        <sc-if value="{{ svcDetailView }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;{{ narrowWrap }}">
+          <div style="position:relative;padding:14px 16px 16px;background-image:{{ svcDetail.bg }};background-color:#2A3340;color:#F7F1E3">
+            <button onclick="{{ closeSvc }}" style="width:36px;height:36px;border-radius:999px;background:rgba(247,241,227,0.92);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-bottom:12px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#2A3340" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px">{{ svcDetail.name }}</div>
+            <div style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:rgba(247,241,227,0.78);margin-top:3px">{{ svcDetail.service }} · {{ svcDetail.city }}</div>
+            <div style="display:flex;align-items:center;gap:10px;margin-top:9px;font-family:'Hanken Grotesk',sans-serif;font-size:12.5px"><span style="font-weight:700"><span style="color:#D9A02D">★</span> {{ svcDetail.rating }}</span><span style="color:rgba(247,241,227,0.7)">{{ svcDetail.jobsLabel }}</span></div>
+          </div>
+          <div style="padding:14px 16px 0;font-family:'Hanken Grotesk',sans-serif;font-size:14px;line-height:1.5;color:#4A4334">{{ svcDetail.tagline }}</div>
+
+          <!-- success -->
+          <sc-if value="{{ svcDone }}" hint-placeholder-val="{{ false }}">
+            <div style="margin:20px 16px;background:#fff;border:1px solid rgba(42,51,64,0.14);border-radius:16px;padding:24px 18px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px">
+              <div style="width:64px;height:64px;border-radius:999px;background:#1B8A5B;display:flex;align-items:center;justify-content:center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;color:#2A3340">{{ svcDoneTitle }}</div>
+              <div style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:#7B8290;line-height:1.5;max-width:250px">{{ svcDoneMsg }}</div>
+              <button onclick="{{ closeSvc }}" style="margin-top:4px;background:#2A3340;border:none;border-radius:12px;padding:13px 22px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:14px;color:#F7F1E3">Back to services</button>
+            </div>
+          </sc-if>
+
+          <!-- BOOK path -->
+          <sc-if value="{{ svcShowBook }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:18px 16px 0">
+            <div style="font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:14px;color:#2A3340;margin-bottom:10px">Pick a date</div>
+            <div class="nbscroll" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">
+              <sc-for list="{{ svcDays }}" as="d" hint-placeholder-count="7">
+                <button onclick="{{ d.onClick }}" style="{{ d.style }}"><span style="font-size:10.5px;opacity:0.7">{{ d.label }}</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px">{{ d.num }}</span></button>
+              </sc-for>
+            </div>
+            <div style="font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:14px;color:#2A3340;margin:18px 0 10px">Pick a time</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px">
+              <sc-for list="{{ svcSlots }}" as="s" hint-placeholder-count="5">
+                <button onclick="{{ s.onClick }}" style="{{ s.style }}">{{ s.t }}</button>
+              </sc-for>
+            </div>
+            <div style="margin-top:18px;background:#F0F2F4;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center">
+              <div><div style="font-family:'Hanken Grotesk',sans-serif;font-size:11.5px;color:#7B8290">Starting price</div><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;color:#2A3340">{{ svcDetail.price }}</div></div>
+              <button onclick="{{ confirmBooking }}" style="{{ confirmStyle }}">{{ confirmLabel }}</button>
+            </div>
+            <button onclick="{{ switchToQuote }}" style="width:100%;margin-top:12px;background:none;border:1px dashed rgba(42,51,64,0.3);border-radius:11px;padding:12px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:600;font-size:12.5px;color:#5A6270">Need something custom? Request a quote instead →</button>
+          </div>
+          </sc-if>
+
+          <!-- QUOTE path -->
+          <sc-if value="{{ svcShowQuote }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:18px 16px 0">
+            <div style="display:flex;align-items:center;gap:8px;background:#EAE3D3;border-radius:11px;padding:11px 13px;margin-bottom:16px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H7l-3 3V5z" stroke="#7A5A1E" stroke-width="2" stroke-linejoin="round"></path></svg>
+              <span style="font-family:'Hanken Grotesk',sans-serif;font-size:12px;color:#5A6270;line-height:1.35">This job is priced per request. Describe what you need and {{ svcDetail.firstName }} will send a quote.</span>
+            </div>
+            <label style="font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:13px;color:#2A3340;display:block;margin-bottom:7px">Describe the job</label>
+            <textarea placeholder="e.g. Build a 6ft wardrobe with sliding doors for a bedroom in Lekki…" style="width:100%;min-height:90px;border:1px solid rgba(42,51,64,0.2);border-radius:12px;padding:12px;font-family:'Hanken Grotesk',sans-serif;font-size:13.5px;color:#2A3340;resize:vertical;background:#fff"></textarea>
+            <div style="display:flex;gap:10px;margin-top:12px">
+              <div style="flex:1"><label style="font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:13px;color:#2A3340;display:block;margin-bottom:7px">Preferred date</label><input placeholder="Optional" style="width:100%;border:1px solid rgba(42,51,64,0.2);border-radius:12px;padding:11px;font-family:'Hanken Grotesk',sans-serif;font-size:13.5px;background:#fff"></div>
+              <div style="flex:1"><label style="font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:13px;color:#2A3340;display:block;margin-bottom:7px">Budget (₦)</label><input placeholder="Optional" style="width:100%;border:1px solid rgba(42,51,64,0.2);border-radius:12px;padding:11px;font-family:'Hanken Grotesk',sans-serif;font-size:13.5px;background:#fff"></div>
+            </div>
+            <button onclick="{{ sendQuote }}" style="width:100%;margin-top:16px;background:#C1542C;border:none;border-radius:13px;padding:14px;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:15px;color:#fff">Send quote request</button>
+          </div>
+          </sc-if>
+        </div>
+        </sc-if>
+        <div style="height:20px"></div>
+      </div>
+      </sc-if>
+
+    </div>
+
+    <!-- ===================== BOTTOM NAV (mobile) ===================== -->
+    <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;border-top:1px solid rgba(27,42,74,0.1);background:#F7F1E3;height:64px;flex-shrink:0">
+      <button onclick="{{ goHome }}" style="flex:1;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:{{ navHomeColor }}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7M6 10v9h12v-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <span style="font-family:'Hanken Grotesk',sans-serif;font-size:10.5px;font-weight:600">Market</span>
+      </button>
+      <button onclick="{{ goServices }}" style="flex:1;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:{{ navSvcColor }}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a3.5 3.5 0 00-4.9 4.9l-5.5 5.5 1.5 1.5 5.5-5.5a3.5 3.5 0 004.9-4.9l-2.2 2.2-1.5-1.5 2.2-2.2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg>
+        <span style="font-family:'Hanken Grotesk',sans-serif;font-size:10.5px;font-weight:600">Services</span>
+      </button>
+      <button onclick="{{ goCart }}" style="flex:1;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:{{ navCartColor }};position:relative">
+        <div style="position:relative">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 7h15l-1.5 9.5a2 2 0 01-2 1.7H8.5a2 2 0 01-2-1.7L5 5H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="9" cy="21" r="1.3" fill="currentColor"></circle><circle cx="17" cy="21" r="1.3" fill="currentColor"></circle></svg>
+          <sc-if value="{{ showCartBadge }}" hint-placeholder-val="{{ false }}">
+            <span style="position:absolute;top:-6px;right:-8px;min-width:17px;height:17px;border-radius:999px;background:#C1542C;color:#fff;font-family:'Hanken Grotesk',sans-serif;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px">{{ cartCount }}</span>
+          </sc-if>
+        </div>
+        <span style="font-family:'Hanken Grotesk',sans-serif;font-size:10.5px;font-weight:600">Cart</span>
+      </button>
+      <button onclick="{{ goShop }}" style="flex:1;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:{{ navShopColor }}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 9l1-4h14l1 4M4 9v9a1 1 0 001 1h14a1 1 0 001-1V9M4 9h16M4 9a2 2 0 004 0 2 2 0 004 0 2 2 0 004 0 2 2 0 004 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <span style="font-family:'Hanken Grotesk',sans-serif;font-size:10.5px;font-weight:600">Shops</span>
+      </button>
+    </div>
+    </sc-if>
+
+    <!-- TOAST -->
+    <sc-if value="{{ showToast }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;bottom:80px;left:50%;transform:translateX(-50%);background:#1B2A4A;color:#F7F1E3;font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:600;padding:11px 18px;border-radius:999px;box-shadow:0 8px 24px rgba(27,42,74,0.32);animation:om-toast 0.22s ease;white-space:nowrap;z-index:30">{{ toastMsg }}</div>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:440,&quot;height&quot;:900},&quot;homeLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;A&quot;,&quot;B&quot;],&quot;default&quot;:&quot;A&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;prioritizeVerified&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;startCity&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Lagos&quot;,&quot;Abuja&quot;,&quot;Port Harcourt&quot;,&quot;Kano&quot;,&quot;Ibadan&quot;,&quot;Enugu&quot;,&quot;Aba&quot;,&quot;Benin City&quot;],&quot;default&quot;:&quot;Lagos&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  scrollRef = React.createRef();
+  state = {
+    screen: 'home',
+    device: 'mobile',
+    homeLayout: this.props.homeLayout || 'A',
+    city: this.props.startCity || 'Lagos',
+    cat: 'All',
+    selProduct: 'p1',
+    selSeller: 's1',
+    sellerBack: 'home',
+    qty: 1,
+    cart: [],
+    cartStep: 'review',
+    delivery: 'delivery',
+    receipt: false,
+    svcCat: 'All',
+    svcProvider: null,
+    svcMode: null,
+    svcDate: null,
+    svcSlot: null,
+    svcDone: false,
+    toast: ''
+  };
+
+  sellers = [
+    {id:'s1',name:'Adunni Adire Studio',city:'Lagos',verified:true,rating:4.9,sold:1240,joined:'2021',response:'in ~2 hrs',cat:'Fashion & Textiles',tagline:'Hand-dyed Adire and woven Aso-Oke, made the old way in a small Lagos workshop. Every piece is one of a kind.',bankName:'GTBank',bankAcct:'0123 456 789',accountName:'Adunni Textiles Ltd',c1:'#1B2A4A',c2:'#2C426B'},
+    {id:'s3',name:'Zuri Naturals',city:'Lagos',verified:true,rating:4.8,sold:3120,joined:'2020',response:'in ~1 hr',cat:'Beauty & Personal Care',tagline:'Cold-pressed oils and African black soap, blended fresh in small batches with locally sourced shea and herbs.',bankName:'Access Bank',bankAcct:'0987 654 321',accountName:'Zuri Naturals Ent',c1:'#B14A28',c2:'#C96A40'},
+    {id:'s4',name:'Ikenna Woodcraft',city:'Enugu',verified:false,rating:4.7,sold:210,joined:'2022',response:'in ~4 hrs',cat:'Furniture & Interior Décor',tagline:'Solid iroko and woven raffia furniture, hand-built to order in our Enugu workshop.',bankName:'Zenith Bank',bankAcct:'1122 334 455',accountName:'Ikenna O. Woodcraft',c1:'#6B4A2E',c2:'#8A6440'},
+    {id:'s5',name:'Mama Nkechi Pantry',city:'Aba',verified:false,rating:4.9,sold:5400,joined:'2019',response:'in ~3 hrs',cat:'Food, Spices & Pantry',tagline:'Suya spice, palm oil, ofada rice and raw honey — sourced straight from farms in the East.',bankName:'UBA',bankAcct:'2233 445 566',accountName:'Nkechi Foods',c1:'#8A5A1E',c2:'#A8742E'},
+    {id:'s6',name:'Crowned Hair Co.',city:'Abuja',verified:true,rating:4.8,sold:860,joined:'2021',response:'in ~1 hr',cat:'Hair',tagline:'Ethically sourced wigs, weaves and extensions, hand-tied and styled in Abuja.',bankName:'First Bank',bankAcct:'3344 556 677',accountName:'Crowned Hair Ltd',c1:'#5B2A3E',c2:'#7A3A52'},
+    {id:'s7',name:'Terra & Clay Studio',city:'Ibadan',verified:false,rating:4.7,sold:430,joined:'2022',response:'in ~5 hrs',cat:'Arts, Crafts & Home Décor',tagline:'Terracotta, textile art and limited prints from a two-person studio in Ibadan.',bankName:'Kuda',bankAcct:'4455 667 788',accountName:'Terra & Clay',c1:'#A6492B',c2:'#C26340'},
+    {id:'s8',name:'Naija Beadworks',city:'Benin City',verified:true,rating:4.9,sold:1180,joined:'2020',response:'in ~2 hrs',cat:'Jewelry & Accessories',tagline:'Brass, coral and bead jewellery handmade in the Benin tradition.',bankName:'GTBank',bankAcct:'5566 778 899',accountName:'Naija Beadworks',c1:'#2A4A5B',c2:'#3C6678'}
+  ];
+
+  products = [
+    {id:'p1',name:'Adire Indigo Kaftan',cat:'Fashion & Textiles',price:28500,sellerId:'s1',rating:4.9,sold:312,desc:'A flowing kaftan hand-dyed in deep Adire indigo using the traditional tie-resist method. Breathable cotton, cut for everyday elegance.',highlights:['Hand-dyed','100% cotton','Unisex fit']},
+    {id:'p2',name:'Aso-Oke Headwrap Set',cat:'Fashion & Textiles',price:15000,sellerId:'s1',rating:4.8,sold:188,desc:'A two-piece gele and shoulder-wrap set woven from genuine Aso-Oke. Holds its shape beautifully for any occasion.',highlights:['Hand-woven','Gele + wrap','Gift-boxed']},
+    {id:'p3',name:'Shea & Black Soap Bar',cat:'Beauty & Personal Care',price:3200,sellerId:'s3',rating:4.7,sold:980,desc:'Raw African black soap enriched with unrefined shea butter. Gentle on sensitive skin and made in small batches.',highlights:['Raw shea','No parabens','Small batch']},
+    {id:'p4',name:'Hibiscus Glow Face Oil',cat:'Beauty & Personal Care',price:6500,sellerId:'s3',rating:4.6,sold:420,desc:'A lightweight facial oil pressed from hibiscus and baobab seed. Absorbs fast and leaves a natural glow.',highlights:['Cold-pressed','30ml glass','Vegan']},
+    {id:'p5',name:'Kinky Coily Clip-ins',cat:'Hair',price:42000,sellerId:'s6',rating:4.8,sold:156,desc:'A full set of clip-in extensions matched to natural 4C texture. Reusable, tangle-free and double-wefted.',highlights:['4C texture','7 pieces','Reusable']},
+    {id:'p6',name:'Lace Frontal Wig 18"',cat:'Hair',price:95000,sellerId:'s6',rating:4.9,sold:241,desc:'A pre-plucked 18-inch lace frontal wig, hand-tied for a natural hairline. Bleached knots, ready to wear.',highlights:['Pre-plucked','HD lace','Hand-tied']},
+    {id:'p7',name:'Iroko Wood Stool',cat:'Furniture & Interior Décor',price:35000,sellerId:'s4',rating:4.7,sold:86,desc:'A low stool carved from a single block of seasoned iroko. Sturdy, oiled finish that ages beautifully.',highlights:['Solid iroko','Hand-carved','Oiled finish']},
+    {id:'p8',name:'Raffia Pendant Lamp',cat:'Furniture & Interior Décor',price:48000,sellerId:'s4',rating:4.8,sold:64,desc:'A woven raffia pendant shade that casts a warm, textured glow. Includes fittings for standard ceiling mounts.',highlights:['Hand-woven','Warm glow','Fittings incl.']},
+    {id:'p9',name:'Suya Spice Blend 200g',cat:'Food, Spices & Pantry',price:2500,sellerId:'s5',rating:4.9,sold:1520,desc:'The real yaji — groundnut, ginger and chilli ground to a smoky, nutty suya spice. No fillers.',highlights:['No fillers','Resealable','200g']},
+    {id:'p10',name:'Cold-Pressed Palm Oil 1L',cat:'Food, Spices & Pantry',price:4800,sellerId:'s5',rating:4.7,sold:640,desc:'Unbleached, cold-pressed red palm oil straight from the source. Rich colour and flavour for proper soups.',highlights:['Unbleached','1 litre','Farm-sourced']},
+    {id:'p11',name:'Ofada Rice 5kg',cat:'Food, Spices & Pantry',price:12000,sellerId:'s5',rating:4.8,sold:310,desc:'Locally grown, stone-free ofada rice with that signature earthy aroma. Cleaned and ready to cook.',highlights:['Stone-free','Locally grown','5kg sack']},
+    {id:'p12',name:'Terracotta Table Vase',cat:'Arts, Crafts & Home Décor',price:18000,sellerId:'s7',rating:4.6,sold:120,desc:'A hand-thrown terracotta vase with a matte natural finish. Each one carries the maker\u2019s fingerprints.',highlights:['Hand-thrown','Matte finish','One of a kind']},
+    {id:'p13',name:'Adire Wall Throw',cat:'Arts, Crafts & Home Décor',price:22000,sellerId:'s7',rating:4.7,sold:95,desc:'A large Adire textile panel finished for hanging. Brings indigo pattern and warmth to any wall.',highlights:['Ready to hang','1.2 x 1.6m','Hand-dyed']},
+    {id:'p14',name:'Brass & Bead Necklace',cat:'Jewelry & Accessories',price:16500,sellerId:'s8',rating:4.9,sold:204,desc:'A statement necklace of hand-cast brass discs strung with glass trade beads. Adjustable cord.',highlights:['Cast brass','Adjustable','Handmade']},
+    {id:'p15',name:'Coral Statement Earrings',cat:'Jewelry & Accessories',price:9800,sellerId:'s8',rating:4.8,sold:176,desc:'Bold coral-bead drop earrings in the Benin tradition. Light enough for all-day wear.',highlights:['Coral beads','Lightweight','Gift-boxed']},
+    {id:'p16',name:'Raw Forest Honey 500ml',cat:'Agro-Products',price:5500,sellerId:'s5',rating:4.9,sold:388,desc:'Unprocessed raw honey harvested from forest hives. Thick, floral and never heated.',highlights:['Raw & unheated','500ml','Single origin']},
+    {id:'p17',name:'Lagos Skyline Art Print',cat:'Creative & Media',price:25000,sellerId:'s7',rating:4.7,sold:52,desc:'A limited-edition giclée print of the Lagos skyline at dusk. Signed and numbered by the artist.',highlights:['Signed','Limited 1/50','A2 size']}
+  ];
+
+  providers = [
+    {id:'v1',name:'Tunde Carpentry & Joinery',service:'Carpentry & Joinery',group:'Carpentry',city:'Lagos',rating:4.8,jobs:142,type:'quote',tagline:'Custom wardrobes, shelving, doors and repairs. Free site visit within Lagos before any quote.',c1:'#3A4A5E',c2:'#52677E',price:'Quote on request'},
+    {id:'v2',name:'Bisi Bespoke Tailoring',service:'Fashion Design',group:'Fashion',city:'Abuja',rating:4.9,jobs:308,type:'book',tagline:'Made-to-measure occasion wear and alterations. Book a fitting and we handle the rest.',c1:'#4A3A5E',c2:'#65527E',price:'from \u20a68,000 / fitting'},
+    {id:'v3',name:'Glow by Ada',service:'Makeup Artistry',group:'Makeup',city:'Lagos',rating:5.0,jobs:520,type:'book',tagline:'Bridal and event makeup with optional home service across Lagos.',c1:'#5E3A4A',c2:'#7E5266',price:'from \u20a615,000 / face'},
+    {id:'v4',name:'Frames by Chidi',service:'Photography',group:'Photography',city:'Port Harcourt',rating:4.7,jobs:96,type:'quote',tagline:'Events, portraits and product shoots. Packages tailored to your day.',c1:'#3A5052',c2:'#527072',price:'Quote on request'},
+    {id:'v5',name:'Aunty Ronke Catering',service:'Catering',group:'Catering',city:'Ibadan',rating:4.9,jobs:240,type:'quote',tagline:'Small chops to full event spreads, cooked fresh and delivered hot.',c1:'#5E4A2A',c2:'#7E6638',price:'Quote on request'},
+    {id:'v6',name:'Sade Interiors',service:'Interior Styling',group:'Interior',city:'Lagos',rating:4.8,jobs:64,type:'book',tagline:'Room styling and space planning consults, in person or virtual.',c1:'#3A4A4A',c2:'#526868',price:'from \u20a620,000 / consult'}
+  ];
+
+  cities = ['Lagos','Abuja','Port Harcourt','Kano','Ibadan','Enugu','Aba','Benin City'];
+  cats = ['All','Fashion & Textiles','Beauty & Personal Care','Hair','Furniture & Interior Décor','Food, Spices & Pantry','Arts, Crafts & Home Décor','Jewelry & Accessories','Agro-Products','Creative & Media'];
+  svcGroups = ['All','Carpentry','Fashion','Makeup','Photography','Catering','Interior'];
+  reviewSeed = [
+    {n:'Chioma A.',c:'Lagos',t:'Came exactly as shown in the pictures. Packaging was lovely, will buy again.'},
+    {n:'Emeka O.',c:'Abuja',t:'Seller replied fast on WhatsApp and confirmed my transfer same day. Smooth.'},
+    {n:'Halima B.',c:'Kano',t:'Authentic and good quality. You can tell it\u2019s genuinely handmade.'}
+  ];
+  days = [{d:'Thu',n:'25',avail:true},{d:'Fri',n:'26',avail:true},{d:'Sat',n:'27',avail:true},{d:'Sun',n:'28',avail:false},{d:'Mon',n:'29',avail:true},{d:'Tue',n:'30',avail:true},{d:'Wed',n:'01',avail:true}];
+  slots = [{t:'09:00',open:true},{t:'10:30',open:false},{t:'12:00',open:true},{t:'14:30',open:true},{t:'16:00',open:true}];
+
+  theme(cat){
+    const M = {
+      'Fashion & Textiles':['#1B2A4A','#2C426B','weave','TEXTILES'],
+      'Beauty & Personal Care':['#B14A28','#C96A40','dots','BEAUTY'],
+      'Hair':['#5B2A3E','#7A3A52','lines','HAIR'],
+      'Furniture & Interior Décor':['#6B4A2E','#8A6440','weave','FURNITURE'],
+      'Food, Spices & Pantry':['#8A5A1E','#A8742E','dots','PANTRY'],
+      'Arts, Crafts & Home Décor':['#A6492B','#C26340','cross','CRAFTS'],
+      'Jewelry & Accessories':['#2A4A5B','#3C6678','dots','JEWELRY'],
+      'Agro-Products':['#5E5424','#7E7236','lines','AGRO'],
+      'Creative & Media':['#3A2A5B','#523F7A','weave','CREATIVE']
+    };
+    const v = M[cat] || M['Fashion & Textiles'];
+    return {c1:v[0],c2:v[1],motif:v[2],short:v[3]};
+  }
+  bg(c1,c2,m){
+    const base = 'linear-gradient(140deg, '+c1+', '+c2+')';
+    const d = 'rgba(247,241,227,0.10)';
+    if(m==='dots') return 'radial-gradient(circle at 24% 28%, '+d+' 2px, transparent 2.6px), radial-gradient(circle at 68% 62%, '+d+' 2px, transparent 2.6px), radial-gradient(circle at 44% 86%, '+d+' 2px, transparent 2.6px), '+base;
+    if(m==='lines') return 'repeating-linear-gradient(135deg, '+d+' 0 1px, transparent 1px 11px), '+base;
+    if(m==='cross') return 'repeating-linear-gradient(0deg, '+d+' 0 1px, transparent 1px 12px), repeating-linear-gradient(90deg, '+d+' 0 1px, transparent 1px 12px), '+base;
+    return 'repeating-linear-gradient(45deg, '+d+' 0 1px, transparent 1px 9px), repeating-linear-gradient(-45deg, '+d+' 0 1px, transparent 1px 9px), '+base;
+  }
+  fmt(n){ return '\u20a6'+Number(n).toLocaleString('en-US'); }
+  initials(name){ return name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+  sellerById(id){ return this.sellers.find(s=>s.id===id) || this.sellers[0]; }
+  enrich(p){
+    const s = this.sellerById(p.sellerId);
+    const t = this.theme(p.cat);
+    return Object.assign({}, p, {
+      priceFmt:this.fmt(p.price),
+      category:p.cat,
+      sellerName:s.name, location:s.city, verified:s.verified,
+      soldLabel:p.sold+' sold',
+      bg:this.bg(t.c1,t.c2,t.motif), catShort:t.short
+    });
+  }
+  navTo(patch){ this.setState(patch, ()=>{ if(this.scrollRef.current) this.scrollRef.current.scrollTop = 0; }); }
+  showToast(msg){ this.setState({toast:msg}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({toast:''}),1700); }
+  copy(text,msg){ try{ navigator.clipboard && navigator.clipboard.writeText(text); }catch(e){} this.showToast(msg); }
+
+  chipStyle(active){ return 'flex:0 0 auto;padding:8px 14px;border-radius:999px;font-family:\'Hanken Grotesk\',sans-serif;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap;border:1px solid '+(active?'#1B2A4A':'rgba(27,42,74,0.16)')+';background:'+(active?'#1B2A4A':'#fff')+';color:'+(active?'#F7F1E3':'#1B2A4A'); }
+  svcChipStyle(active){ return 'flex:0 0 auto;padding:8px 14px;border-radius:999px;font-family:\'Hanken Grotesk\',sans-serif;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap;border:1px solid '+(active?'#2A3340':'rgba(42,51,64,0.18)')+';background:'+(active?'#2A3340':'#fff')+';color:'+(active?'#F7F1E3':'#2A3340'); }
+
+  renderVals(){
+    const st = this.state;
+    const dev = st.device;
+    const isWide = dev !== 'mobile';
+    const frameStyle = dev==='mobile' ? 'width:min(440px,100vw);height:calc(100vh - 54px)' : dev==='tablet' ? 'width:min(900px,100vw);height:calc(100vh - 54px)' : 'width:min(1280px,100vw);height:calc(100vh - 54px)';
+    const gridCols = dev==='mobile' ? '1fr 1fr' : dev==='tablet' ? 'repeat(3,1fr)' : 'repeat(4,1fr)';
+    const catCols = dev==='mobile' ? '1fr 1fr 1fr' : dev==='tablet' ? 'repeat(5,1fr)' : 'repeat(6,1fr)';
+    const narrowWrap = isWide ? 'max-width:760px;margin-left:auto;margin-right:auto;width:100%' : '';
+    const devBtn = (a)=>'border:none;cursor:pointer;padding:6px 14px;border-radius:999px;font-family:\'Hanken Grotesk\',sans-serif;font-weight:700;font-size:12px;background:'+(a?'#D9A02D':'transparent')+';color:'+(a?'#1B2A4A':'rgba(247,241,227,0.85)');
+    const verW = this.props.prioritizeVerified !== false;
+    const all = this.products.map(p=>this.enrich(p));
+    const byId = id => all.find(p=>p.id===id) || all[0];
+
+    // ---- HOME trending with location priority ----
+    const catFiltered = st.cat==='All' ? all : all.filter(p=>p.cat===st.cat);
+    const sorter = (a,b)=>{ if(verW && a.verified!==b.verified) return a.verified?-1:1; return b.sold-a.sold; };
+    const trendLocal = catFiltered.filter(p=>p.location===st.city).sort(sorter);
+    const trendRest = catFiltered.filter(p=>p.location!==st.city).sort(sorter);
+
+    const cityChips = this.cities.map(c=>({label:c, style:this.chipStyle(c===st.city), onClick:()=>this.setState({city:c})}));
+    const catChips = this.cats.map(c=>({label:(c==='All'?'All items':c), style:this.chipStyle(c===st.cat), onClick:()=>this.setState({cat:c})}));
+    const catTiles = this.cats.filter(c=>c!=='All').map(c=>{ const t=this.theme(c); return {label:c, bg:this.bg(t.c1,t.c2,t.motif), onClick:()=>this.navTo({cat:c, homeLayout:'A'})}; });
+
+    const trustItems = [
+      {label:'Pay sellers direct by transfer', icon:React.createElement('svg',{width:22,height:22,viewBox:'0 0 24 24',fill:'none'},React.createElement('rect',{x:3,y:6,width:18,height:13,rx:2,stroke:'#D9A02D',strokeWidth:2}),React.createElement('path',{d:'M3 10h18',stroke:'#D9A02D',strokeWidth:2}))},
+      {label:'Every item Made in Nigeria', icon:React.createElement('svg',{width:22,height:22,viewBox:'0 0 24 24',fill:'none'},React.createElement('path',{d:'M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z',stroke:'#D9A02D',strokeWidth:2,strokeLinejoin:'round'}),React.createElement('path',{d:'M9 12l2 2 4-4',stroke:'#D9A02D',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'}))},
+      {label:'Admin-verified sellers', icon:React.createElement('svg',{width:22,height:22,viewBox:'0 0 24 24',fill:'none'},React.createElement('path',{d:'M12 2l2.4 1.9 3 .2.9 2.9 2.3 2-1 2.9 1 2.9-2.3 2-.9 2.9-3 .2L12 22l-2.4-1.9-3-.2-.9-2.9-2.3-2 1-2.9-1-2.9 2.3-2 .9-2.9 3-.2z',fill:'#D9A02D'}),React.createElement('path',{d:'M8.5 12.2l2.3 2.3 4.5-4.6',stroke:'#1B2A4A',strokeWidth:2.2,strokeLinecap:'round',strokeLinejoin:'round'}))}
+    ];
+
+    // ---- LISTING ----
+    const prod = byId(st.selProduct);
+    const sp = this.sellerById(prod.sellerId);
+
+    // ---- CART ----
+    const groupsMap = {};
+    st.cart.forEach(ci=>{ const p=byId(ci.id); const s=this.sellerById(p.sellerId);
+      if(!groupsMap[s.id]) groupsMap[s.id]={seller:s, items:[], subtotal:0};
+      const line=p.price*ci.qty; groupsMap[s.id].subtotal+=line;
+      groupsMap[s.id].items.push({id:p.id, name:p.name, bg:p.bg, qty:ci.qty, priceFmt:this.fmt(p.price), lineFmt:this.fmt(line),
+        inc:()=>this.changeQty(p.id,1), dec:()=>this.changeQty(p.id,-1)});
+    });
+    const cartGroups = Object.values(groupsMap).map(g=>({
+      sellerName:g.seller.name, city:g.seller.city, verified:g.seller.verified, initials:this.initials(g.seller.name),
+      bankName:g.seller.bankName, bankAcct:g.seller.bankAcct, accountName:g.seller.accountName,
+      items:g.items, subtotalFmt:this.fmt(g.subtotal),
+      copy:()=>this.copy(g.seller.bankAcct,'Account number copied')
+    }));
+    const grand = st.cart.reduce((t,ci)=>t+byId(ci.id).price*ci.qty,0);
+    const itemCount = st.cart.reduce((t,ci)=>t+ci.qty,0);
+    const cartEmpty = st.cart.length===0;
+    const stepC = (active,done)=>active?'#F7F1E3':(done?'rgba(247,241,227,0.85)':'rgba(247,241,227,0.45)');
+    const stepBg = (active)=>active?'#D9A02D':'rgba(247,241,227,0.18)';
+    const stepFg = (active)=>active?'#1B2A4A':'rgba(247,241,227,0.7)';
+    const isReview=st.cartStep==='review', isPay=st.cartStep==='pay', isDone=st.cartStep==='done';
+
+    const delivOpt = (active)=>'flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:12px;cursor:pointer;font-family:\'Hanken Grotesk\',sans-serif;font-weight:700;font-size:13px;border:1.5px solid '+(active?'#C1542C':'rgba(27,42,74,0.16)')+';background:'+(active?'rgba(193,84,44,0.08)':'#fff')+';color:'+(active?'#C1542C':'#1B2A4A');
+
+    // ---- SELLER ----
+    const sel = this.sellerById(st.selSeller);
+    const sellerProducts = all.filter(p=>p.sellerId===sel.id);
+    const reviews = this.reviewSeed.map(r=>Object.assign({}, r, {ini:this.initials(r.n)}));
+    const slug = sel.name.toLowerCase().replace(/[^a-z0-9]/g,'');
+
+    // ---- SERVICES ----
+    const svcFiltered = st.svcCat==='All'?this.providers:this.providers.filter(p=>p.group===st.svcCat);
+    const svcChips = this.svcGroups.map(c=>({label:c, style:this.svcChipStyle(c===st.svcCat), onClick:()=>this.setState({svcCat:c})}));
+    const svcProviders = svcFiltered.map(p=>{
+      const isQuote=p.type==='quote';
+      const tagStyle = 'font-family:\'Hanken Grotesk\',sans-serif;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;'+(isQuote?'background:#EAE3D3;color:#7A5A1E':'background:#DDE7E2;color:#1B7A52');
+      return {name:p.name, service:p.service, city:p.city, rating:p.rating, jobsLabel:p.jobs+' jobs done',
+        bg:this.bg(p.c1,p.c2,'weave'), initials:this.initials(p.name),
+        typeLabel:isQuote?'Request a quote':'Instant booking', tagStyle, onClick:()=>this.openSvc(p.id, p.type)};
+    });
+    const svcProv = this.providers.find(p=>p.id===st.svcProvider) || null;
+    let svcDetail = null;
+    if(svcProv){ svcDetail = Object.assign({}, svcProv, {jobsLabel:svcProv.jobs+' jobs done', firstName:svcProv.name.split(' ')[0], bg:this.bg(svcProv.c1,svcProv.c2,'weave')}); }
+    const mode = st.svcMode || (svcProv?svcProv.type:'book');
+    const svcDays = this.days.map(d=>{ const active=st.svcDate===d.n; const base='flex:0 0 auto;width:52px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 0;border-radius:12px;cursor:'+(d.avail?'pointer':'not-allowed')+';';
+      const style = d.avail ? base+'border:1.5px solid '+(active?'#2A3340':'rgba(42,51,64,0.16)')+';background:'+(active?'#2A3340':'#fff')+';color:'+(active?'#F7F1E3':'#2A3340') : base+'border:1.5px solid rgba(42,51,64,0.08);background:#F0F2F4;color:#B6BCC6';
+      return {label:d.d, num:d.n, style, onClick:()=>{ if(d.avail) this.setState({svcDate:d.n}); }}; });
+    const svcSlots = this.slots.map(s=>{ const active=st.svcSlot===s.t; const base='padding:11px 0;border-radius:11px;text-align:center;font-family:\'Hanken Grotesk\',sans-serif;font-weight:600;font-size:13px;cursor:'+(s.open?'pointer':'not-allowed')+';';
+      const style = s.open ? base+'border:1.5px solid '+(active?'#2A3340':'rgba(42,51,64,0.16)')+';background:'+(active?'#2A3340':'#fff')+';color:'+(active?'#F7F1E3':'#2A3340') : base+'border:1.5px solid rgba(42,51,64,0.06);background:#F0F2F4;color:#C2C7CF;text-decoration:line-through';
+      return {t:s.t, style, onClick:()=>{ if(s.open) this.setState({svcSlot:s.t}); }}; });
+    const canConfirm = !!st.svcDate && !!st.svcSlot;
+    const confirmStyle = 'border:none;border-radius:11px;padding:13px 20px;cursor:'+(canConfirm?'pointer':'not-allowed')+';font-family:\'Hanken Grotesk\',sans-serif;font-weight:700;font-size:14px;color:#fff;background:'+(canConfirm?'#C1542C':'#C7B9A0');
+
+    return {
+      // screen flags
+      isHome:st.screen==='home', isListing:st.screen==='listing', isCart:st.screen==='cart', isSeller:st.screen==='seller', isServices:st.screen==='services',
+      // nav
+      goHome:()=>this.navTo({screen:'home'}), goServices:()=>this.navTo({screen:'services', svcProvider:null, svcDone:false}),
+      goCart:()=>this.navTo({screen:'cart'}), goShop:()=>this.navTo({screen:'seller', selSeller:'s1', sellerBack:'home'}),
+      navHomeColor:st.screen==='home'?'#C1542C':'#9C9079', navSvcColor:st.screen==='services'?'#C1542C':'#9C9079',
+      navCartColor:st.screen==='cart'?'#C1542C':'#9C9079', navShopColor:st.screen==='seller'?'#C1542C':'#9C9079',
+      cartCount:itemCount, showCartBadge:itemCount>0,
+      device:dev, isWide, isMobile:!isWide, frameStyle, gridCols, catCols, narrowWrap,
+      setMobile:()=>this.setState({device:'mobile'}), setTablet:()=>this.setState({device:'tablet'}), setDesktop:()=>this.setState({device:'desktop'}),
+      devMobileStyle:devBtn(dev==='mobile'), devTabletStyle:devBtn(dev==='tablet'), devDesktopStyle:devBtn(dev==='desktop'),
+      topMarketColor:st.screen==='home'?'#D9A02D':'rgba(247,241,227,0.85)', topSvcColor:st.screen==='services'?'#D9A02D':'rgba(247,241,227,0.85)', topShopColor:st.screen==='seller'?'#D9A02D':'rgba(247,241,227,0.85)', topCartColor:st.screen==='cart'?'#D9A02D':'rgba(247,241,227,0.85)',
+      // toast
+      showToast:!!st.toast, toastMsg:st.toast,
+      // home layout
+      isLayoutA:st.homeLayout==='A', isLayoutB:st.homeLayout==='B',
+      setLayoutA:()=>this.setState({homeLayout:'A'}), setLayoutB:()=>this.setState({homeLayout:'B'}),
+      layoutAStyle:'border:none;cursor:pointer;width:26px;height:24px;border-radius:999px;font-family:\'Space Grotesk\',sans-serif;font-weight:700;font-size:12px;background:'+(st.homeLayout==='A'?'#D9A02D':'transparent')+';color:'+(st.homeLayout==='A'?'#1B2A4A':'rgba(247,241,227,0.7)'),
+      layoutBStyle:'border:none;cursor:pointer;width:26px;height:24px;border-radius:999px;font-family:\'Space Grotesk\',sans-serif;font-weight:700;font-size:12px;background:'+(st.homeLayout==='B'?'#D9A02D':'transparent')+';color:'+(st.homeLayout==='B'?'#1B2A4A':'rgba(247,241,227,0.7)'),
+      activeCity:st.city, cityChips, catChips, catTiles, trustItems,
+      trendLocal, trendRest, hasLocal:trendLocal.length>0, noLocal:trendLocal.length===0, hasRest:trendRest.length>0,
+      trendCountLabel:catFiltered.length+' makers',
+      openProduct:(id)=>this.navTo({screen:'listing', selProduct:id, qty:1}),
+      // listing
+      prod, prodVerified:sp.verified, prodHighlights:prod.highlights||[],
+      spSellerName:sp.name, spCity:sp.city, spVerified:sp.verified, spRating:sp.rating, spSold:sp.sold>=1000?(sp.sold/1000).toFixed(1)+'k':String(sp.sold), spJoined:sp.joined, spResponse:sp.response, spInitials:this.initials(sp.name),
+      qty:st.qty, incQty:()=>this.setState(s=>({qty:s.qty+1})), decQty:()=>this.setState(s=>({qty:Math.max(1,s.qty-1)})),
+      addCurrent:()=>this.addToCart(prod.id, st.qty), enquireCurrent:()=>this.showToast('Opening chat with '+sp.name+'…'),
+      openSpShop:()=>this.navTo({screen:'seller', selSeller:sp.id, sellerBack:'listing'}),
+      // cart
+      cartEmpty, cartGroups, grandFmt:this.fmt(grand), itemCountLabel:itemCount+(itemCount===1?' item':' items'),
+      groupCountLabel:cartGroups.length+(cartGroups.length===1?' seller':' sellers'),
+      showReview:!cartEmpty&&isReview, showPay:!cartEmpty&&isPay, showDone:isDone,
+      stepReviewColor:stepC(isReview,isPay||isDone), stepReviewBg:stepBg(isReview||isPay||isDone), stepReviewFg:stepFg(isReview||isPay||isDone),
+      stepPayColor:stepC(isPay,isDone), stepPayBg:stepBg(isPay||isDone), stepPayFg:stepFg(isPay||isDone),
+      stepDoneColor:stepC(isDone,false), stepDoneBg:stepBg(isDone), stepDoneFg:stepFg(isDone),
+      deliveryStyle:delivOpt(st.delivery==='delivery'), pickupStyle:delivOpt(st.delivery==='pickup'),
+      setDeliveryMode:()=>this.setState({delivery:'delivery'}), setPickupMode:()=>this.setState({delivery:'pickup'}),
+      deliveryLabel:st.delivery==='delivery'?'Delivery':'Pickup',
+      goPay:()=>this.navTo({cartStep:'pay'}), backToReview:()=>this.navTo({cartStep:'review'}),
+      placeOrder:()=>this.navTo({cartStep:'done'}),
+      newOrder:()=>this.navTo({screen:'home', cart:[], cartStep:'review', receipt:false}),
+      receipt:st.receipt, noReceipt:!st.receipt, toggleReceipt:()=>this.setState(s=>({receipt:!s.receipt})),
+      receiptBoxStyle:'display:flex;align-items:center;gap:12px;cursor:pointer;border-radius:13px;padding:14px;border:1.5px dashed '+(st.receipt?'#1B8A5B':'rgba(27,42,74,0.25)')+';background:'+(st.receipt?'rgba(27,138,91,0.06)':'#fff'),
+      // seller
+      selName:sel.name, selCity:sel.city, selVerified:sel.verified, selRating:sel.rating, selSold:sel.sold>=1000?(sel.sold/1000).toFixed(1)+'k':String(sel.sold), selJoined:sel.joined, selResponse:sel.response, selTagline:sel.tagline, selInitials:this.initials(sel.name),
+      selBanner:this.bg(sel.c1,sel.c2,'weave'), shareLink:'ibuynaija.com/'+slug,
+      sellerProducts, reviews,
+      backFromSeller:()=>this.navTo({screen:st.sellerBack}),
+      copyLink:()=>this.copy('ibuynaija.com/'+slug,'Shop link copied'), shareWA:()=>this.showToast('Sharing '+sel.name+'…'),
+      // services
+      svcListView:!st.svcProvider, svcDetailView:!!st.svcProvider, svcChips, svcProviders, svcDetail,
+      svcShowBook:!st.svcDone && mode==='book', svcShowQuote:!st.svcDone && mode==='quote',
+      svcDays, svcSlots, confirmStyle, confirmLabel:'Confirm booking',
+      closeSvc:()=>this.setState({svcProvider:null, svcDone:false, svcMode:null, svcDate:null, svcSlot:null}),
+      switchToQuote:()=>this.setState({svcMode:'quote'}),
+      confirmBooking:()=>{ if(canConfirm) this.setState({svcDone:true}); },
+      sendQuote:()=>this.setState({svcDone:true}),
+      svcDone:st.svcDone,
+      svcDoneTitle: mode==='quote'?'Quote request sent':'Booking confirmed',
+      svcDoneMsg: svcProv ? (mode==='quote' ? svcProv.name.split(' ')[0]+' will review your job and reply with a price, usually within a day.' : 'You\u2019re booked with '+svcProv.name+'. They\u2019ll confirm and send a reminder before your slot.') : ''
+    };
+  }
+
+  addToCart(id, qty){
+    this.setState(s=>{
+      const cart = s.cart.slice();
+      const ex = cart.find(c=>c.id===id);
+      if(ex) ex.qty += qty; else cart.push({id, qty});
+      return {cart};
+    });
+    this.showToast('Added to cart');
+  }
+  changeQty(id, delta){
+    this.setState(s=>{
+      let cart = s.cart.map(c=>c.id===id?{id:c.id, qty:c.qty+delta}:c).filter(c=>c.qty>0);
+      return {cart};
+    });
+  }
+  openSvc(id, type){ this.navTo({screen:'services', svcProvider:id, svcMode:type, svcDate:null, svcSlot:null, svcDone:false}); }
+}
+</script>
+
+
+</body></html>
